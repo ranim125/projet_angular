@@ -1,1 +1,29 @@
-<p>category-list works!</p>
+<h2>Liste des catégories</h2>
+
+<!-- Ajouter nouvelle catégorie -->
+<input type="text" placeholder="Nom catégorie" [(ngModel)]="newCategoryName">
+<button (click)="addCategory()">Ajouter</button>
+
+<br><br>
+
+<!-- Table categories -->
+<table border="1" cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Actions</th>
+  </tr>
+
+  <tr *ngFor="let cat of categories">
+    <td>{{ cat.id }}</td>
+    <td>
+      <span *ngIf="editedCategory?.id !== cat.id">{{ cat.name }}</span>
+      <input *ngIf="editedCategory?.id === cat.id" [(ngModel)]="editedCategory.name" type="text">
+    </td>
+    <td>
+      <button *ngIf="editedCategory?.id !== cat.id" (click)="startEdit(cat)">Edit</button>
+      <button *ngIf="editedCategory?.id === cat.id" (click)="saveEdit()">Save</button>
+      <button (click)="deleteCategory(cat.id)">Delete</button>
+    </td>
+  </tr>
+</table>
