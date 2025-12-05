@@ -12,7 +12,7 @@ export const routes: Routes = [
   { path: 'categories', component: CategoryList },
   { path: 'categories/add', component: CategoryForm },
   { path: 'categories/edit/:id', component: CategoryForm },
-  { path: '**', redirectTo: '/categories' }
+  { path: '**', redirectTo: '/categories' },
 
   {
     path: 'admin',
