@@ -1,22 +1,7 @@
 [
-    {
-        "id": 1,
-        "nom": "Électronique"
-    },
-    {
-        "id": 2,
-        "nom": "Vêtements"
-    },
-    {
-        "id": 3,
-        "nom": "Alimentaire"
-    },
-    {
-        "id": 4,
-        "nom": "Mobilier"
-    },
-    {
-        "id": 5,
-        "nom": "Livres"
-    }
+  { "id": 1, "name": "Électronique" },
+  { "id": 2, "name": "Vêtements" },
+  { "id": 3, "name": "Alimentaire" },
+  { "id": 4, "name": "Mobilier" },
+  { "id": 5, "name": "Livres" }
 ]

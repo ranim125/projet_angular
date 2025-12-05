@@ -1,29 +1,41 @@
 <h2>Liste des catégories</h2>
 
-<!-- Ajouter nouvelle catégorie -->
-<input type="text" placeholder="Nom catégorie" [(ngModel)]="newCategoryName">
-<button (click)="addCategory()">Ajouter</button>
+<div class="header">
+  <button mat-raised-button color="primary" (click)="goToAdd()">Ajouter une catégorie</button>
 
-<br><br>
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Nom..." />
+  </mat-form-field>
+</div>
 
-<!-- Table categories -->
-<table border="1" cellpadding="8">
-  <tr>
-    <th>ID</th>
-    <th>Nom</th>
-    <th>Actions</th>
-  </tr>
+<table mat-table [dataSource]="filteredAndPaged" class="mat-elevation-z2">
 
-  <tr *ngFor="let cat of categories">
-    <td>{{ cat.id }}</td>
-    <td>
-      <span *ngIf="editedCategory?.id !== cat.id">{{ cat.name }}</span>
-      <input *ngIf="editedCategory?.id === cat.id" [(ngModel)]="editedCategory.name" type="text">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> ID </th>
+    <td mat-cell *matCellDef="let cat"> {{cat.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Nom </th>
+    <td mat-cell *matCellDef="let cat"> {{cat.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let cat">
+      <button matButton (click)="edit(cat)">Modifier</button>
+      <button matButton color="warn" (click)="delete(cat.id)">Supprimer</button>
     </td>
-    <td>
-      <button *ngIf="editedCategory?.id !== cat.id" (click)="startEdit(cat)">Edit</button>
-      <button *ngIf="editedCategory?.id === cat.id" (click)="saveEdit()">Save</button>
-      <button (click)="deleteCategory(cat.id)">Delete</button>
-    </td>
-  </tr>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 20]"
+  (page)="onPageChange($event)">
+</mat-paginator>
