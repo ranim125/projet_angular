@@ -1,0 +1,5 @@
+[
+  { "id": 1, "nom": "Karim", "prenom": "Youssef", "telephone": "0666666666", "adresse": "Casablanca", "disponible": true },
+  { "id": 2, "nom": "Hicham", "prenom": "Reda", "telephone": "0677777777", "adresse": "Rabat", "disponible": false },
+  { "id": 3, "nom": "Omar", "prenom": "Said", "telephone": "0688888888", "adresse": "Marrakech", "disponible": true }
+]

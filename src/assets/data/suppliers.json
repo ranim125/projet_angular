@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nom": "AgroFournil SARL",
+    "adresse": "123 Rue Mohammed V, Casablanca",
+    "telephone": "0522 123 456",
+    "email": "contact@agrofournil.ma",
+    "region": "Casablanca-Settat"
+  },
+  {
+    "id": 2,
+    "nom": "TechSupply Maroc",
+    "adresse": "45 Avenue Hassan II, Rabat",
+    "telephone": "0537 987 654",
+    "email": "info@techsupply.ma",
+    "region": "Rabat-Salé-Kénitra"
+  },
+  {
+    "id": 3,
+    "nom": "MarocFruit Distribution",
+    "adresse": "Zone Industrielle, Marrakech",
+    "telephone": "0524 555 666",
+    "email": "vente@marocfruit.ma",
+    "region": "Marrakech-Safi"
+  }
+]

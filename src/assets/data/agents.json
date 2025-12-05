@@ -1,0 +1,5 @@
+[
+  { "id": 1, "nom": "Admin", "prenom": "Super", "email": "admin@depot.ma", "telephone": "0600000000", "role": "admin" },
+  { "id": 2, "nom": "Martin", "prenom": "Luc", "email": "luc@depot.ma", "telephone": "0611111111", "role": "agent" },
+  { "id": 3, "nom": "Sophie", "prenom": "Leclerc", "email": "sophie@depot.ma", "telephone": "0622222222", "role": "agent" }
+]
