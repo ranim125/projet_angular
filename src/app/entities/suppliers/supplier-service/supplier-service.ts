@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isAdmin, getCurrentUserId } from '../../shared/role-utils';
+import { isAdmin } from '../../../shared/role-utils';
 
 export interface Supplier {
   id: number;

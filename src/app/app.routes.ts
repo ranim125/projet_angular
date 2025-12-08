@@ -8,6 +8,9 @@ import { RoleGuard } from './auth/guards/role.guard';*/
 import { SupplierList } from './entities/suppliers/supplier-list/supplier-list';
 import { SupplierForm } from './entities/suppliers/supplier-form/supplier-form';
 
+import { ClientList } from './entities/clients/client-list/client-list';
+import { ClientForm } from './entities/clients/client-form/client-form';
+
 
 export const routes: Routes = [
   //{ path: 'login', component: LoginComponent },
@@ -19,6 +22,10 @@ export const routes: Routes = [
   { path: 'entities/suppliers/add', component: SupplierForm },
   { path: 'entities/suppliers/edit/:id', component: SupplierForm },
   { path: 'suppliers', redirectTo: 'entities/suppliers' },
+  { path: 'entities/clients', component: ClientList },
+  { path: 'entities/clients/add', component: ClientForm },
+  { path: 'entities/clients/edit/:id', component: ClientForm },
+  { path: 'clients', redirectTo: '/entities/clients' }
 
   /*{
     path: 'admin',

@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
-import { SupplierService, Supplier } from '../supplier-service';
+import { SupplierService, Supplier } from '../supplier-service/supplier-service';
  import { isAdmin } from '../../../shared/role-utils';
 
 
@@ -25,11 +25,11 @@ import { SupplierService, Supplier } from '../supplier-service';
     MatButtonModule
   ],
   templateUrl: './supplier-form.html',
-  styleUrl: './supplier-form.css'   // ← attention, tu avais écrit styleUrls avec un "s"
+  styleUrl: './supplier-form.css'   
 })
 export class SupplierForm implements OnInit {
 
-  // On déclare le formulaire sans l’initialiser tout de suite
+  
   form!: FormGroup;
 
   isEdit = false;

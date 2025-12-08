@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { SupplierService, Supplier } from '../supplier-service';
+import { SupplierService, Supplier } from '../supplier-service/supplier-service';
 import { isAdmin } from '../../../shared/role-utils';
 
 @Component({
