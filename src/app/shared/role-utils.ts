@@ -1,4 +1,4 @@
-// src/app/shared/role.utils.ts
+
 export interface CurrentUser {
   id: number;
   nom: string;
