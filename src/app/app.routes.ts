@@ -15,6 +15,9 @@ import { DelivererList } from './entities/deliverers/deliverer-list/deliverer-li
 import { DelivererForm } from './entities/deliverers/deliverer-form/deliverer-form';
 import { AgentList } from './entities/agents/agent-list/agent-list';
 import { AgentForm } from './entities/agents/agent-form/agent-form';
+import { ProductList } from './products/product-list/product-list';
+import { ProductForm } from './products/product-form/product-form';
+import { ProductDetails } from './products/product-details/product-details';
 
 
 export const routes: Routes = [
@@ -38,6 +41,11 @@ export const routes: Routes = [
 { path: 'entities/agents/add', component: AgentForm },
 { path: 'entities/agents/edit/:id', component: AgentForm },
 { path: 'agents', redirectTo: 'entities/agents' },
+{ path: 'products', component: ProductList },
+{ path: 'products/new', component: ProductForm },
+{ path: 'products/edit/:id', component: ProductForm },
+{ path: 'products/:id', component: ProductDetails }
+
 
 
   /*{
