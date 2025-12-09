@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Ordinateur Portable",
+    "price": 2500,
+    "categoryId": 1,
+    "inStock": true,
+    "description": "PC performant pour le travail."
+  },
+  {
+    "id": 2,
+    "name": "T-shirt",
+    "price": 45,
+    "categoryId": 2,
+    "inStock": true,
+    "description": "T-shirt en coton."
+  },
+  {
+    "id": 3,
+    "name": "Table en bois",
+    "price": 350,
+    "categoryId": 4,
+    "inStock": false,
+    "description": "Table de salle à manger."
+  }
+]
