@@ -28,7 +28,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
 
   { path: 'login', component: LoginPageComponent },
-  { path: '', redirectTo: 'categories', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login', pathMatch: 'full' },
   { path: 'categories', component: CategoryList },
   { path: 'categories/add', component: CategoryForm },
   { path: 'categories/edit/:id', component: CategoryForm },
@@ -52,6 +52,6 @@ export const routes: Routes = [
 { path: 'products/edit/:id', component: ProductForm },
 { path: 'products/:id', component: ProductDetails },
  { path: 'admin', component: DashboardAdmin, canActivate: [AuthGuard], data: { role: 'ADMIN' } },
-  { path: 'agent', component: DashboardAgent, canActivate: [AuthGuard], data: { role: 'AGENT' } },
-  { path: '**', redirectTo: 'login', pathMatch: 'full' }
+  { path: 'agent', component: DashboardAgent, canActivate: [AuthGuard], data: { role: 'AGENT' } }
+  
 ];
