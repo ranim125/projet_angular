@@ -1,1 +1,45 @@
-<p>supplier-form works!</p>
+
+<h2>{{ isEdit ? 'Modifier le fournisseur' : 'Nouveau fournisseur' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="supplier-form">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nom / Raison sociale</mat-label>
+    <input matInput formControlName="nom" required />
+    <mat-error *ngIf="form.get('nom')?.hasError('required')">Obligatoire</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Adresse complète</mat-label>
+    <input matInput formControlName="adresse" required />
+    <mat-error *ngIf="form.get('adresse')?.hasError('required')">Obligatoire</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Téléphone</mat-label>
+    <input matInput formControlName="telephone" placeholder="06xx xxx xxx" />
+    <mat-error *ngIf="form.get('telephone')?.hasError('pattern')">Format marocain requis</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" required />
+    <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalide</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Région</mat-label>
+    <input matInput formControlName="region" />
+  </mat-form-field>
+
+  <div class="actions">
+    <button 
+  mat-raised-button 
+  color="primary" 
+  type="submit" 
+  [disabled]="form.invalid || !isAdmin">
+  {{ isEdit ? 'Enregistrer' : 'Ajouter' }}
+</button>
+    <button mat-button type="button" (click)="cancel()">Annuler</button>
+  </div>
+</form>
