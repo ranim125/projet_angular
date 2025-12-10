@@ -18,6 +18,8 @@ import { AgentForm } from './entities/agents/agent-form/agent-form';
 import { ProductList } from './products/product-list/product-list';
 import { ProductForm } from './products/product-form/product-form';
 import { ProductDetails } from './products/product-details/product-details';
+import { DashboardAdmin } from './dashboard/dashboard-admin/dashboard-admin';
+import { DashboardAgent } from './dashboard/dashboard-agent/dashboard-agent';
 
 
 export const routes: Routes = [
@@ -44,7 +46,9 @@ export const routes: Routes = [
 { path: 'products', component: ProductList },
 { path: 'products/new', component: ProductForm },
 { path: 'products/edit/:id', component: ProductForm },
-{ path: 'products/:id', component: ProductDetails }
+{ path: 'products/:id', component: ProductDetails },
+{ path: 'dash_admin', component: DashboardAdmin },
+{ path: 'dash_agent', component: DashboardAgent },
 
 
 
