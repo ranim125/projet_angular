@@ -3,7 +3,7 @@
     <div>
       <label>Email:</label>
       <input formControlName="email" type="email" />
-      <div *ngIf="form.controls.email.invalid && form.controls.email.touched" class="error">
+      <div *ngIf="email?.invalid && email?.touched" class="error">
         Email invalide
       </div>
     </div>
@@ -11,12 +11,12 @@
     <div>
       <label>Mot de passe:</label>
       <input formControlName="password" type="password" />
-      <div *ngIf="form.controls.password.invalid && form.controls.password.touched" class="error">
+      <div *ngIf="password?.invalid && password?.touched" class="error">
         Mot de passe invalide
       </div>
     </div>
 
-    <button type="submit">Connexion</button>
+    <button type="submit" [disabled]="loading">Connexion</button>
     <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
   </form>
 </div>

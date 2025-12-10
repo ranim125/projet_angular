@@ -24,7 +24,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  async login(email: string, password: string): Promise<{ success: boolean; message: string; role?: UserRole }> {
+  async login(
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; message: string; role?: UserRole }> {
     try {
       const users = await firstValueFrom(this.http.get<AgentUser[]>('/assets/data/agents.json'));
 
@@ -37,14 +40,15 @@ export class AuthService {
         return { success: false, message: 'Mot de passe incorrect.' };
       }
 
-      // Persist simple (suffisant pour un TP front)
+      // Stockage simple pour TP
       localStorage.setItem(this.STORAGE_TOKEN, 'fake-token');
       localStorage.setItem(this.STORAGE_ROLE, user.role);
       localStorage.setItem(this.STORAGE_USER_EMAIL, user.email);
 
       return { success: true, message: 'Connexion réussie', role: user.role };
-    } catch {
-      return { success: false, message: 'Erreur de chargement des utilisateurs (assets JSON).' };
+    } catch (error) {
+      console.error('Erreur AuthService login:', error);
+      return { success: false, message: 'Erreur de chargement des utilisateurs.' };
     }
   }
 
@@ -53,7 +57,8 @@ export class AuthService {
   }
 
   getRole(): UserRole | null {
-    return (localStorage.getItem(this.STORAGE_ROLE) as UserRole) ?? null;
+    const role = localStorage.getItem(this.STORAGE_ROLE);
+    return role === 'admin' || role === 'agent' ? (role as UserRole) : null;
   }
 
   getCurrentEmail(): string | null {
