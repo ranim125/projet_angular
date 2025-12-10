@@ -1,22 +1,22 @@
-<p>login-page works!</p>
 <div class="login-container">
-  <h2>Connexion</h2>
   <form [formGroup]="form" (ngSubmit)="submit()">
-
-    <label>Email</label>
-    <input formControlName="email" type="email" placeholder="Email">
-    <div class="error" *ngIf="form.controls.email.invalid && form.controls.email.touched">
-      Email invalide
+    <div>
+      <label>Email:</label>
+      <input formControlName="email" type="email" />
+      <div *ngIf="form.controls.email.invalid && form.controls.email.touched" class="error">
+        Email invalide
+      </div>
     </div>
 
-    <label>Mot de passe</label>
-    <input formControlName="password" type="password" placeholder="Mot de passe">
-    <div class="error" *ngIf="form.controls.password.invalid && form.controls.password.touched">
-      Mot de passe min 4 caractères
+    <div>
+      <label>Mot de passe:</label>
+      <input formControlName="password" type="password" />
+      <div *ngIf="form.controls.password.invalid && form.controls.password.touched" class="error">
+        Mot de passe invalide
+      </div>
     </div>
 
+    <button type="submit">Connexion</button>
     <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-
-    <button type="submit" [disabled]="form.invalid">Se connecter</button>
   </form>
 </div>

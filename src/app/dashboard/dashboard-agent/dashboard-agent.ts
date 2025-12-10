@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-dashboard-agent',
-  imports: [],
-  templateUrl: './dashboard-agent.html',
-  styleUrl: './dashboard-agent.css',
+  standalone: true,
+  template: '<h2>Dashboard Agent</h2>'
 })
-export class DashboardAgent {
-
-}
+export class DashboardAgent {}

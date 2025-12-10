@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login-page',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent {
-
   form: FormGroup;
-  errorMessage: string = '';
+  errorMessage = '';
+  loading = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.form = this.fb.group({
@@ -20,19 +23,23 @@ export class LoginPageComponent {
     });
   }
 
-  submit() {
+  async submit() {
+    this.errorMessage = '';
     if (this.form.invalid) return;
 
+    this.loading = true;
     const { email, password } = this.form.value;
-    const result = this.authService.login(email!, password!);
+
+    const result = await this.authService.login(email, password);
+
+    this.loading = false;
 
     if (!result.success) {
-      this.errorMessage = result.message ?? 'Erreur inconnue';
+      this.errorMessage = result.message;
       return;
     }
 
-    // Redirection selon rôle
-    if (result.role === 'ADMIN') this.router.navigate(['/admin']);
-    else this.router.navigate(['/agent']);
+    // role vient de JSON : "admin" ou "agent"
+    this.router.navigate([result.role === 'admin' ? '/admin' : '/agent']);
   }
 }
