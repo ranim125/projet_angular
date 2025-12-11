@@ -21,6 +21,8 @@ import { AgentForm } from './entities/agents/agent-form/agent-form';
 import { ProductList } from './products/product-list/product-list';
 import { ProductForm } from './products/product-form/product-form';
 import { ProductDetails } from './products/product-details/product-details';
+import { DashboardAdmin } from './dashboard/dashboard-admin/dashboard-admin';
+import { DashboardAgent } from './dashboard/dashboard-agent/dashboard-agent';
 
 
 import { Routes } from '@angular/router';
@@ -50,8 +52,23 @@ export const routes: Routes = [
 { path: 'products', component: ProductList },
 { path: 'products/new', component: ProductForm },
 { path: 'products/edit/:id', component: ProductForm },
-{ path: 'products/:id', component: ProductDetails },
- { path: 'admin', component: DashboardAdmin, canActivate: [AuthGuard], data: { role: 'ADMIN' } },
-  { path: 'agent', component: DashboardAgent, canActivate: [AuthGuard], data: { role: 'AGENT' } }
-  
+{ path: 'products/:id', component: ProductDetails }
+
+
+
+  /*{
+    path: 'admin',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { role: 'ADMIN' },
+    loadChildren: () => import('./dashboard/dashboard.routes').then(r => r.ADMIN_ROUTES),
+  },
+
+  {
+    path: 'agent',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { role: 'AGENT' },
+    loadChildren: () => import('./dashboard/dashboard.routes').then(r => r.AGENT_ROUTES),
+  },
+
+  { path: '**', redirectTo: 'login' }*/
 ];
