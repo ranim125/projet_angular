@@ -1,0 +1,22 @@
+<div class="login-container">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div>
+      <label>Email:</label>
+      <input formControlName="email" type="email" />
+      <div *ngIf="email?.invalid && email?.touched" class="error">
+        Email invalide
+      </div>
+    </div>
+
+    <div>
+      <label>Mot de passe:</label>
+      <input formControlName="password" type="password" />
+      <div *ngIf="password?.invalid && password?.touched" class="error">
+        Mot de passe invalide
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="loading">Connexion</button>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </form>
+</div>

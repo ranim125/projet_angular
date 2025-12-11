@@ -125,6 +125,7 @@ export class ProductList implements OnInit {
 
   goToAdd(): void {
     location.href = `/products/new`;
+    location.href = `/products/new`;
   }
 
   viewDetails(p: Product): void {

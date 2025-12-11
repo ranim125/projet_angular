@@ -19,7 +19,7 @@ import { CategoryService, Category } from '../category-service/category-service'
     MatButtonModule
   ],
   templateUrl: './category-form.html',
-  styleUrl: './category-form.css'
+  styleUrls: ['./category-form.css']
 })
 export class CategoryForm implements OnInit {
   form!: FormGroup;

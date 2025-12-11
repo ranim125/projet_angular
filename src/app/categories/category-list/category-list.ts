@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import {CategoryService, Category } from '../category-service/category-service';
+import { CategoryService, Category } from '../category-service/category-service';
 
 @Component({
   selector: 'app-category-list',
@@ -23,7 +23,7 @@ import {CategoryService, Category } from '../category-service/category-service';
     MatButtonModule
   ],
   templateUrl: './category-list.html',
-  styleUrl: './category-list.css'
+  styleUrls: ['./category-list.css']
 })
 export class CategoryList implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'actions'];
@@ -34,6 +34,7 @@ export class CategoryList implements OnInit {
   pageSize = 5;
   pageIndex = 0;
   searchTerm = '';
+  totalItems = 0;
 
   constructor(private categoryService: CategoryService, private router: Router) {}
 
@@ -50,7 +51,9 @@ export class CategoryList implements OnInit {
     let temp = [...this.categories];
 
     if (this.searchTerm) {
-      temp = temp.filter(c => c.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+      temp = temp.filter(c =>
+        c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     }
 
     const start = this.pageIndex * this.pageSize;
@@ -58,8 +61,6 @@ export class CategoryList implements OnInit {
     this.totalItems = temp.length;
   }
 
-  // pour le paginator
-  totalItems = 0;
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
