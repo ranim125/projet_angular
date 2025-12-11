@@ -112,7 +112,7 @@ export class ProductList implements OnInit {
   }
 
   edit(prod: Product): void {
-    location.href = `/entities/products/edit/${prod.id}`;
+    location.href = `/products/edit:${prod.id}`;
   }
 
   delete(id: number): void {
@@ -123,7 +123,7 @@ export class ProductList implements OnInit {
   }
 
   goToAdd(): void {
-    location.href = `/entities/products/add`;
+    location.href = `/products/new`;
   }
 
   viewDetails(p: Product): void {
