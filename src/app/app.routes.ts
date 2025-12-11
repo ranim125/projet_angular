@@ -12,7 +12,7 @@ import { CategoryForm } from './categories/category-form/category-form';
 // Produits
 import { ProductList } from './products/product-list/product-list';
 import { ProductForm } from './products/product-form/product-form';
-import { ProductDetails } from './products/product-details/product-details';
+
 
 // Entities
 import { SupplierList } from './entities/suppliers/supplier-list/supplier-list';
@@ -62,7 +62,7 @@ export const routes: Routes = [
       { path: 'products', component: ProductList },
       { path: 'products/new', component: ProductForm },
       { path: 'products/edit/:id', component: ProductForm },
-      { path: 'products/:id', component: ProductDetails },
+      
 
       // Fournisseurs
       { path: 'entities/suppliers', component: SupplierList },
