@@ -1,28 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { StatsComponent } from '../stats/stats';
 import { GraphsComponent } from '../graphs/graphs';
-
-import { CategoryList } from '../../categories/category-list/category-list';
-import { AgentList } from '../../entities/agents/agent-list/agent-list';
-import { ClientList } from '../../entities/clients/client-list/client-list';
-import { DelivererList } from '../../entities/deliverers/deliverer-list/deliverer-list';
-import { SupplierList } from '../../entities/suppliers/supplier-list/supplier-list';
-import { ProductList } from '../../products/product-list/product-list';
 
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
   imports: [
+    CommonModule,
     StatsComponent,
-    GraphsComponent,
-    CategoryList,
-    AgentList,
-    ClientList,
-    DelivererList,
-    SupplierList,
-    ProductList
+    GraphsComponent
   ],
-  templateUrl: './dashboard-admin.html'
+  templateUrl: './dashboard-admin.html',
+  styleUrls: ['../dashboard.css'] // optionnel, si tu veux du style
 })
-export class DashboardAdmin {}
+export class DashboardAdmin implements OnInit {
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    // Force le rafraîchissement après login → les données des stats s'affichent immédiatement
+    setTimeout(() => this.cdr.detectChanges(), 150);
+  }
+}

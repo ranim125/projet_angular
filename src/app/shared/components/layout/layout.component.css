@@ -1,0 +1,145 @@
+/* Layout global */
+.container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidenav {
+  width: 280px;
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+}
+
+/* Header de la sidebar */
+.sidebar-header {
+  height: 120px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(135deg, #3f51b5, #5c6bc0) !important;
+  color: white;
+}
+
+.welcome {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: white;
+  color: #3f51b5;
+  font-weight: bold;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.name {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+}
+
+.role {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Menu */
+mat-nav-list a {
+  height: 56px;
+  border-radius: 0 25px 25px 0;
+  margin: 4px 12px;
+  transition: all 0.2s ease;
+}
+
+mat-nav-list a:hover {
+  background: rgba(63, 81, 181, 0.08);
+}
+
+mat-nav-list a.active {
+  background: #3f51b5;
+  color: white;
+  font-weight: 500;
+  border-left: 4px solid #ffffff;
+}
+
+mat-nav-list a.active mat-icon {
+  color: white;
+}
+
+/* Bouton logout sidebar */
+.logout-spacer {
+  flex: 1 1 auto;
+}
+
+.logout-btn {
+  margin: 16px 20px;
+  width: calc(100% - 40px);
+}
+
+/* Topbar (en haut) */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mobile-menu {
+  display: none;
+  margin-right: 12px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Contenu principal */
+.main-content {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+/* RESPONSIVE — Mobile & Tablette */
+@media (max-width: 959px) {
+  .sidenav {
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .mobile-menu {
+    display: inline-flex !important;
+  }
+
+  .sidebar-header {
+    justify-content: center;
+  }
+
+  .welcome {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .role {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 960px) {
+  .mobile-menu {
+    display: none;
+  }
+}

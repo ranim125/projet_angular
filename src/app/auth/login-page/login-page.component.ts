@@ -1,100 +1,161 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { AuthService, UserRole } from '../services/auth-service'; // CORRIGÉ : import propre
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-export class LoginPageComponent implements OnInit {
-  form: FormGroup;
+export class LoginPageComponent implements OnInit, OnDestroy {
+  hidePassword = true;
+  isLoading = false;
   errorMessage = '';
-  loading = false;
+  isBlocked = false;
+  blockRemainingSeconds = 0;
+
+  private blockTimer$!: Subscription;
+  private readonly BLOCK_DURATION = 60; // 60 secondes
+  private readonly MAX_ATTEMPTS = 3;
+
+  // On déclare le FormGroup APRÈS l'injection du FormBuilder → plus d'erreur
+  loginForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {
-    this.form = this.fb.group({
+    // Initialisation ici, après que fb existe
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(4)]]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      const role = this.authService.getRole();
-      this.router.navigate([role === 'admin' ? '/admin' : '/agent']);
+      this.redirectByRole();
     }
+    this.checkIfBlocked();
   }
 
-  get email(): AbstractControl | null {
-    return this.form.get('email');
+  ngOnDestroy(): void {
+    this.blockTimer$?.unsubscribe();
   }
 
-  get password(): AbstractControl | null {
-    return this.form.get('password');
-  }
+  async onSubmit(): Promise<void> {
+    if (this.loginForm.invalid || this.isBlocked) return;
 
-  async submit(): Promise<void> {
+    this.isLoading = true;
     this.errorMessage = '';
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.loading = true;
-    const { email, password } = this.form.value;
-    const lowerEmail = email.toLowerCase();
-
-    // Vérifier si bloqué — CHANGÉ en sessionStorage
-    const blockTimeStr = sessionStorage.getItem(`block_time_${lowerEmail}`);
-    if (blockTimeStr) {
-      const blockTime = parseInt(blockTimeStr, 10);
-      if (Date.now() < blockTime) {
-        const minutesLeft = Math.ceil((blockTime - Date.now()) / (1000 * 60));
-        this.errorMessage = `Compte bloqué. Réessayez dans ${minutesLeft} minute(s).`;
-        this.loading = false;
-        return;
-      } else {
-        // Temps écoulé → déblocage automatique
-        sessionStorage.removeItem(`block_time_${lowerEmail}`);
-        sessionStorage.removeItem(`login_attempts_${lowerEmail}`);
-      }
-    }
+    const { email, password } = this.loginForm.value;
 
     try {
-      const result = await this.authService.login(email, password);
+      const result = await this.authService.login(email!.trim(), password!);
 
-      if (!result.success) {
-        // Incrémenter les tentatives — CHANGÉ en sessionStorage
-        let attempts = (parseInt(sessionStorage.getItem(`login_attempts_${lowerEmail}`) || '0', 10)) + 1;
-        sessionStorage.setItem(`login_attempts_${lowerEmail}`, attempts.toString());
-
-        if (attempts >= 3) {
-          const blockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
-          sessionStorage.setItem(`block_time_${lowerEmail}`, blockUntil.toString());
-          this.errorMessage = 'Trop de tentatives échouées. Compte bloqué pour 5 minutes.';
-        } else {
-          this.errorMessage = `${result.message} (${attempts}/3 tentatives)`;
-        }
+      if (result.success) {
+        this.resetAttempts();
+        this.redirectByRole(result.role!);
       } else {
-        // Succès → reset des tentatives et blocage — CHANGÉ en sessionStorage
-        sessionStorage.removeItem(`login_attempts_${lowerEmail}`);
-        sessionStorage.removeItem(`block_time_${lowerEmail}`);
-        this.router.navigate([result.role === 'admin' ? '/admin' : '/agent']);
+        this.handleFailedAttempt(result.message);
       }
-    } catch (error: any) {
-      this.errorMessage = 'Erreur serveur. Veuillez réessayer.';
+    } catch {
+      this.errorMessage = 'Erreur réseau. Veuillez réessayer.';
     } finally {
-      this.loading = false;
+      this.isLoading = false;
     }
+  }
+
+  private redirectByRole(role?: UserRole): void {
+    // Après login, on redirige vers /admin ou /agent → qui redirigent vers /dashboard
+    const target = role === 'admin' ? '/admin' : '/agent';
+    this.router.navigate([target]);
+  }
+
+  private handleFailedAttempt(message: string): void {
+    const attempts = this.getAttempts() + 1;
+    localStorage.setItem('loginAttempts', attempts.toString());
+
+    if (attempts >= this.MAX_ATTEMPTS) {
+      this.blockUser();
+      this.errorMessage = 'Trop de tentatives. Compte bloqué 60 secondes.';
+    } else {
+      this.errorMessage = `${message} (${attempts}/${this.MAX_ATTEMPTS} tentatives)`;
+    }
+  }
+
+  private blockUser(): void {
+    const blockUntil = Date.now() + this.BLOCK_DURATION * 1000;
+    localStorage.setItem('blockUntil', blockUntil.toString());
+
+    this.isBlocked = true;
+    this.blockRemainingSeconds = this.BLOCK_DURATION;
+
+    this.blockTimer$ = interval(1000).subscribe(() => {
+      this.blockRemainingSeconds--;
+      if (this.blockRemainingSeconds <= 0) {
+        this.unblockUser();
+      }
+    });
+  }
+
+  private checkIfBlocked(): void {
+    const blockUntil = localStorage.getItem('blockUntil');
+    if (!blockUntil) return;
+
+    const remaining = Math.ceil((Number(blockUntil) - Date.now()) / 1000);
+    if (remaining > 0) {
+      this.isBlocked = true;
+      this.blockRemainingSeconds = remaining;
+
+      this.blockTimer$ = interval(1000).subscribe(() => {
+        this.blockRemainingSeconds--;
+        if (this.blockRemainingSeconds <= 0) {
+          this.unblockUser();
+        }
+      });
+    } else {
+      this.unblockUser();
+    }
+  }
+
+  private unblockUser(): void {
+    localStorage.removeItem('blockUntil');
+    localStorage.removeItem('loginAttempts');
+    this.isBlocked = false;
+    this.blockRemainingSeconds = 0;
+    this.blockTimer$?.unsubscribe();
+  }
+
+  private getAttempts(): number {
+    return Number(localStorage.getItem('loginAttempts') || '0');
+  }
+
+  private resetAttempts(): void {
+    localStorage.removeItem('loginAttempts');
+    localStorage.removeItem('blockUntil');
+    this.isBlocked = false;
   }
 }

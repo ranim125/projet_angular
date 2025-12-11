@@ -1,0 +1,71 @@
+<mat-sidenav-container class="container">
+  <!-- Sidebar -->
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <mat-toolbar color="primary" class="sidebar-header">
+      <div class="welcome">
+        <div class="avatar">{{ (user?.prenom?.[0] ?? '') + (user?.nom?.[0] ?? '') }}</div>
+        <div>
+          <div class="name">Bienvenue</div>
+          <div class="role">{{ user?.prenom }} {{ user?.nom }}</div>
+        </div>
+      </div>
+    </mat-toolbar>
+
+    <mat-nav-list>
+   <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+  <mat-icon>analytics</mat-icon> Statistiques
+</a>
+
+      <a mat-list-item routerLink="/products" routerLinkActive="active">
+        <mat-icon>inventory_2</mat-icon> Produits
+      </a>
+
+      <a mat-list-item routerLink="/categories" routerLinkActive="active">
+        <mat-icon>category</mat-icon> Catégories
+      </a>
+
+      <a mat-list-item routerLink="/entities/suppliers" routerLinkActive="active">
+        <mat-icon>local_shipping</mat-icon> Fournisseurs
+      </a>
+
+      <a mat-list-item routerLink="/entities/deliverers" routerLinkActive="active">
+        <mat-icon>delivery_dining</mat-icon> Livreurs
+      </a>
+
+      <a mat-list-item routerLink="/entities/clients" routerLinkActive="active">
+        <mat-icon>people</mat-icon> Clients
+      </a>
+
+      <a mat-list-item routerLink="/entities/agents" routerLinkActive="active" *ngIf="isAdmin">
+        <mat-icon>supervisor_account</mat-icon> Agents
+      </a>
+
+      <a mat-list-item routerLink="/profile" routerLinkActive="active">
+        <mat-icon>person</mat-icon> Mon Profil
+      </a>
+    </mat-nav-list>
+
+    <div class="logout-spacer"></div>
+    <button mat-stroked-button color="warn" class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon> Déconnexion
+    </button>
+  </mat-sidenav>
+
+  <!-- Contenu principal -->
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="topbar">
+      <button mat-icon-button (click)="sidenav.toggle()" class="mobile-menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Gest-Depot | {{ isAdmin ? 'Administrateur' : 'Agent' }}</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

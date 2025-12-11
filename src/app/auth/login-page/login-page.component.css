@@ -1,49 +1,83 @@
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
 .login-container {
-  width: 300px;
-  margin: 80px auto;
-  padding: 30px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f7f7f7;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
 }
 
-h2 {
+.login-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
   text-align: center;
-  margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  margin-top: 10px;
+.logo {
+  margin-bottom: 32px;
 }
 
-input {
+.big-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  color: #3f51b5;
+}
+
+h1 {
+  margin: 16px 0 8px;
+  color: #333;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: #666;
+  margin: 0;
+}
+
+.login-form {
+  margin-top: 24px;
+  text-align: left;
+}
+
+.full-width {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  box-sizing: border-box;
+  margin-bottom: 16px;
 }
 
-button {
+.login-btn {
   width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  background-color: #28a745;
-  border: none;
-  color: white;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
+  height: 50px;
+  font-size: 16px;
+  margin-top: 16px;
 }
 
-button:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
+.error-message, .blocked-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d32f2f;
+  background: #ffebee;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
 }
 
-.error {
-  color: red;
-  font-size: 12px;
-  margin-top: 4px;
+.blocked-message {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.footer {
+  margin-top: 40px;
+  color: #999;
+  font-size: 13px;
 }

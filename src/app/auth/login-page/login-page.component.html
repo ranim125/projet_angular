@@ -1,22 +1,64 @@
-<div class="login-container">
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div>
-      <label>Email:</label>
-      <input formControlName="email" type="email" />
-      <div *ngIf="email?.invalid && email?.touched" class="error">
-        Email invalide
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo">
+        <mat-icon class="big-icon">warehouse</mat-icon>
+        <h1>Gest-Depot</h1>
+        <p class="subtitle">Gestion de dépôt & stock</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="ex: admin@depot.ma" autocomplete="email">
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            L'email est obligatoire
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Format email invalide
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" autocomplete="current-password">
+          <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            Le mot de passe est obligatoire
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+            Minimum 6 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <div class="error-message" *ngIf="errorMessage">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <div class="blocked-message" *ngIf="isBlocked">
+          <mat-icon color="warn">lock_clock</mat-icon>
+          <span>
+            Trop de tentatives. Compte bloqué pendant {{ blockRemainingSeconds }} secondes.
+          </span>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="login-btn"
+          [disabled]="loginForm.invalid || isLoading || isBlocked">
+          <span *ngIf="!isLoading">Se connecter</span>
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        </button>
+      </form>
+
+      <div class="footer">
+        <small>© 2025 Gest-Depot — Tous droits réservés</small>
       </div>
     </div>
-
-    <div>
-      <label>Mot de passe:</label>
-      <input formControlName="password" type="password" />
-      <div *ngIf="password?.invalid && password?.touched" class="error">
-        Mot de passe invalide
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="loading">Connexion</button>
-    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-  </form>
+  </div>
 </div>

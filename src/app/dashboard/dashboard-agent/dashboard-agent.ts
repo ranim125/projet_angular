@@ -1,24 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { StatsComponent } from '../stats/stats';
-
-import { CategoryList } from '../../categories/category-list/category-list';
-import { ClientList } from '../../entities/clients/client-list/client-list';
-import { DelivererList } from '../../entities/deliverers/deliverer-list/deliverer-list';
-import { SupplierList } from '../../entities/suppliers/supplier-list/supplier-list';
-import { ProductList } from '../../products/product-list/product-list';
 
 @Component({
   selector: 'app-dashboard-agent',
   standalone: true,
   imports: [
-    StatsComponent,
-    CategoryList,
-    ClientList,
-    DelivererList,
-    SupplierList,
-    ProductList
+    CommonModule,
+    StatsComponent
   ],
-  templateUrl: './dashboard-agent.html'
+  templateUrl: './dashboard-agent.html',
+  styleUrls: ['../dashboard.css']
 })
-export class DashboardAgent {}
+export class DashboardAgent implements OnInit {
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    // Même chose pour l'agent → stats chargées direct
+    setTimeout(() => this.cdr.detectChanges(), 150);
+  }
+}

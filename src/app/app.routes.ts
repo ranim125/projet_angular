@@ -1,100 +1,149 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { LoginPageComponent } from './auth/login-page/login-page.component';
-
-// Dashboards
-import { DashboardAdmin } from './dashboard/dashboard-admin/dashboard-admin';
-import { DashboardAgent } from './dashboard/dashboard-agent/dashboard-agent';
-
-// Catégories
-import { CategoryList } from './categories/category-list/category-list';
-import { CategoryForm } from './categories/category-form/category-form';
-
-// Produits
-import { ProductList } from './products/product-list/product-list';
-import { ProductForm } from './products/product-form/product-form';
-
-
-// Entities
-import { SupplierList } from './entities/suppliers/supplier-list/supplier-list';
-import { SupplierForm } from './entities/suppliers/supplier-form/supplier-form';
-
-import { ClientList } from './entities/clients/client-list/client-list';
-import { ClientForm } from './entities/clients/client-form/client-form';
-
-import { DelivererList } from './entities/deliverers/deliverer-list/deliverer-list';
-import { DelivererForm } from './entities/deliverers/deliverer-form/deliverer-form';
-
-import { AgentList } from './entities/agents/agent-list/agent-list';
-import { AgentForm } from './entities/agents/agent-form/agent-form';
-
-// Profil — AJOUT
-import { ProfilePageComponent } from './profile/profile-page/profile-page.component';
-
-// Guard
+import { LayoutComponent } from './shared/components/layout/layout.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Page de login publique
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
 
-  // Dashboards protégés par rôle
-  {
-    path: 'admin',
-    component: DashboardAdmin,
-    canActivate: [AuthGuard],
-    data: { role: 'admin' }
-  },
-  {
-    path: 'agent',
-    component: DashboardAgent,
-    canActivate: [AuthGuard],
-    data: { role: 'agent' }
-  },
-
-  // Toutes les autres routes protégées
+  // Toutes les routes protégées passent par le layout (sidebar + header)
   {
     path: '',
+    component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      // Profil — AJOUT (accessible à tous les utilisateurs connectés)
-      { path: 'profile', component: ProfilePageComponent },
+      // Redirection après login (garde tes anciennes URLs /admin et /agent)
+      { path: 'admin', redirectTo: '/dashboard', pathMatch: 'full' },
+      { path: 'agent', redirectTo: '/dashboard', pathMatch: 'full' },
 
-      // Catégories
-      { path: 'categories', component: CategoryList },
-      { path: 'categories/add', component: CategoryForm },
-      { path: 'categories/edit/:id', component: CategoryForm },
+      // Dashboard commun (admin voit graphs, agent non → géré dans le composant)
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./dashboard/dashboard-admin/dashboard-admin')
+          .then(m => m.DashboardAdmin)
+      },
 
-      // Produits
-      { path: 'products', component: ProductList },
-      { path: 'products/new', component: ProductForm },
-      { path: 'products/edit/:id', component: ProductForm },
-      
+      // Profil
+      {
+        path: 'profile',
+        loadComponent: () => import('./profile/profile-page/profile-page.component')
+          .then(m => m.ProfilePageComponent)
+      },
 
-      // Fournisseurs
-      { path: 'entities/suppliers', component: SupplierList },
-      { path: 'entities/suppliers/add', component: SupplierForm },
-      { path: 'entities/suppliers/edit/:id', component: SupplierForm },
+      // ==================== CATÉGORIES ====================
+      {
+        path: 'categories',
+        loadComponent: () => import('./categories/category-list/category-list')
+          .then(m => m.CategoryList)
+      },
+      {
+        path: 'categories/add',
+        loadComponent: () => import('./categories/category-form/category-form')
+          .then(m => m.CategoryForm)
+      },
+      {
+        path: 'categories/edit/:id',
+        loadComponent: () => import('./categories/category-form/category-form')
+          .then(m => m.CategoryForm)
+      },
+
+      // ==================== PRODUITS ====================
+      {
+        path: 'products',
+        loadComponent: () => import('./products/product-list/product-list')
+          .then(m => m.ProductList)
+      },
+      {
+        path: 'products/new',
+        loadComponent: () => import('./products/product-form/product-form')
+          .then(m => m.ProductForm)
+      },
+      {
+        path: 'products/edit/:id',
+        loadComponent: () => import('./products/product-form/product-form')
+          .then(m => m.ProductForm)
+      },
+
+      // ==================== FOURNISSEURS ====================
+      {
+        path: 'entities/suppliers',
+        loadComponent: () => import('./entities/suppliers/supplier-list/supplier-list')
+          .then(m => m.SupplierList)
+      },
+      {
+        path: 'entities/suppliers/add',
+        loadComponent: () => import('./entities/suppliers/supplier-form/supplier-form')
+          .then(m => m.SupplierForm)
+      },
+      {
+        path: 'entities/suppliers/edit/:id',
+        loadComponent: () => import('./entities/suppliers/supplier-form/supplier-form')
+          .then(m => m.SupplierForm)
+      },
       { path: 'suppliers', redirectTo: 'entities/suppliers', pathMatch: 'full' },
 
-      // Clients
-      { path: 'entities/clients', component: ClientList },
-      { path: 'entities/clients/add', component: ClientForm },
-      { path: 'entities/clients/edit/:id', component: ClientForm },
+      // ==================== CLIENTS ====================
+      {
+        path: 'entities/clients',
+        loadComponent: () => import('./entities/clients/client-list/client-list')
+          .then(m => m.ClientList)
+      },
+      {
+        path: 'entities/clients/add',
+        loadComponent: () => import('./entities/clients/client-form/client-form')
+          .then(m => m.ClientForm)
+      },
+      {
+        path: 'entities/clients/edit/:id',
+        loadComponent: () => import('./entities/clients/client-form/client-form')
+          .then(m => m.ClientForm)
+      },
       { path: 'clients', redirectTo: 'entities/clients', pathMatch: 'full' },
 
-      // Livreurs
-      { path: 'entities/deliverers', component: DelivererList },
-      { path: 'entities/deliverers/add', component: DelivererForm },
-      { path: 'entities/deliverers/edit/:id', component: DelivererForm },
+      // ==================== LIVREURS ====================
+      {
+        path: 'entities/deliverers',
+        loadComponent: () => import('./entities/deliverers/deliverer-list/deliverer-list')
+          .then(m => m.DelivererList)
+      },
+      {
+        path: 'entities/deliverers/add',
+        loadComponent: () => import('./entities/deliverers/deliverer-form/deliverer-form')
+          .then(m => m.DelivererForm)
+      },
+      {
+        path: 'entities/deliverers/edit/:id',
+        loadComponent: () => import('./entities/deliverers/deliverer-form/deliverer-form')
+          .then(m => m.DelivererForm)
+      },
       { path: 'deliverers', redirectTo: 'entities/deliverers', pathMatch: 'full' },
 
-      // Agents
-      { path: 'entities/agents', component: AgentList },
-      { path: 'entities/agents/add', component: AgentForm },
-      { path: 'entities/agents/edit/:id', component: AgentForm },
+      // ==================== AGENTS (admin only) ====================
+      {
+        path: 'entities/agents',
+        loadComponent: () => import('./entities/agents/agent-list/agent-list')
+          .then(m => m.AgentList)
+      },
+      {
+        path: 'entities/agents/add',
+        loadComponent: () => import('./entities/agents/agent-form/agent-form')
+          .then(m => m.AgentForm)
+      },
+      {
+        path: 'entities/agents/edit/:id',
+        loadComponent: () => import('./entities/agents/agent-form/agent-form')
+          .then(m => m.AgentForm)
+      },
       { path: 'agents', redirectTo: 'entities/agents', pathMatch: 'full' },
+
+      // Page par défaut après connexion
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
   },
 
-  { path: '**', redirectTo: 'login', pathMatch: 'full' }
+  // Route 404
+  { path: '**', redirectTo: '/login' }
 ];

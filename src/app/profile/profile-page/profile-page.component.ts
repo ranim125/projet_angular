@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ProfileService } from '../profile-service/profile.service';
 import { CurrentUser } from '../../shared/role-utils';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../auth/services/auth-service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http'; // AJOUT : injection directe
 import { firstValueFrom } from 'rxjs'; // AJOUT : import correct
