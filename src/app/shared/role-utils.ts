@@ -4,6 +4,7 @@ export interface CurrentUser {
   prenom: string;
   email: string;
   role: 'admin' | 'agent';
+  telephone?: string;  // AJOUT : champ optionnel (car certains utilisateurs pourraient ne pas l'avoir)
 }
 
 export const getCurrentUser = (): CurrentUser | null => {

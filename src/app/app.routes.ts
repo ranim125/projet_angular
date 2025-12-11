@@ -27,6 +27,9 @@ import { DelivererForm } from './entities/deliverers/deliverer-form/deliverer-fo
 import { AgentList } from './entities/agents/agent-list/agent-list';
 import { AgentForm } from './entities/agents/agent-form/agent-form';
 
+// Profil — AJOUT
+import { ProfilePageComponent } from './profile/profile-page/profile-page.component';
+
 // Guard
 import { AuthGuard } from './auth/guards/auth.guard';
 
@@ -53,6 +56,9 @@ export const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     children: [
+      // Profil — AJOUT (accessible à tous les utilisateurs connectés)
+      { path: 'profile', component: ProfilePageComponent },
+
       // Catégories
       { path: 'categories', component: CategoryList },
       { path: 'categories/add', component: CategoryForm },
