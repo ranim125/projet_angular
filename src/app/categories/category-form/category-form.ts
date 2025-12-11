@@ -58,10 +58,9 @@ export class CategoryForm implements OnInit {
       this.categoryService.add(name);
     }
 
-    this.router.navigate(['/categories']);
-  }
+this.goBack();  }
 
-  cancel() {
-    this.router.navigate(['/categories']);
-  }
+  goBack(): void {
+  window.history.back();
+}
 }
