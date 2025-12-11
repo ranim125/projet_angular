@@ -54,8 +54,8 @@ export class LoginPageComponent implements OnInit {
     const { email, password } = this.form.value;
     const lowerEmail = email.toLowerCase();
 
-    // Vérifier si bloqué
-    const blockTimeStr = localStorage.getItem(`block_time_${lowerEmail}`);
+    // Vérifier si bloqué — CHANGÉ en sessionStorage
+    const blockTimeStr = sessionStorage.getItem(`block_time_${lowerEmail}`);
     if (blockTimeStr) {
       const blockTime = parseInt(blockTimeStr, 10);
       if (Date.now() < blockTime) {
@@ -64,8 +64,9 @@ export class LoginPageComponent implements OnInit {
         this.loading = false;
         return;
       } else {
-        localStorage.removeItem(`block_time_${lowerEmail}`);
-        localStorage.removeItem(`login_attempts_${lowerEmail}`);
+        // Temps écoulé → déblocage automatique
+        sessionStorage.removeItem(`block_time_${lowerEmail}`);
+        sessionStorage.removeItem(`login_attempts_${lowerEmail}`);
       }
     }
 
@@ -73,19 +74,21 @@ export class LoginPageComponent implements OnInit {
       const result = await this.authService.login(email, password);
 
       if (!result.success) {
-        let attempts = (parseInt(localStorage.getItem(`login_attempts_${lowerEmail}`) || '0', 10)) + 1;
-        localStorage.setItem(`login_attempts_${lowerEmail}`, attempts.toString());
+        // Incrémenter les tentatives — CHANGÉ en sessionStorage
+        let attempts = (parseInt(sessionStorage.getItem(`login_attempts_${lowerEmail}`) || '0', 10)) + 1;
+        sessionStorage.setItem(`login_attempts_${lowerEmail}`, attempts.toString());
 
         if (attempts >= 3) {
           const blockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
-          localStorage.setItem(`block_time_${lowerEmail}`, blockUntil.toString());
+          sessionStorage.setItem(`block_time_${lowerEmail}`, blockUntil.toString());
           this.errorMessage = 'Trop de tentatives échouées. Compte bloqué pour 5 minutes.';
         } else {
           this.errorMessage = `${result.message} (${attempts}/3 tentatives)`;
         }
       } else {
-        localStorage.removeItem(`login_attempts_${lowerEmail}`);
-        localStorage.removeItem(`block_time_${lowerEmail}`);
+        // Succès → reset des tentatives et blocage — CHANGÉ en sessionStorage
+        sessionStorage.removeItem(`login_attempts_${lowerEmail}`);
+        sessionStorage.removeItem(`block_time_${lowerEmail}`);
         this.router.navigate([result.role === 'admin' ? '/admin' : '/agent']);
       }
     } catch (error: any) {

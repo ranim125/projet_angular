@@ -7,7 +7,8 @@ export interface CurrentUser {
 }
 
 export const getCurrentUser = (): CurrentUser | null => {
-  const data = localStorage.getItem('currentUser');
+  // CHANGÉ : sessionStorage au lieu de localStorage
+  const data = sessionStorage.getItem('currentUser');
   return data ? JSON.parse(data) : null;
 };
 
