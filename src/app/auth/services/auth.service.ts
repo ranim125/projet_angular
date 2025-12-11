@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { CurrentUser } from '../../shared/role-utils';
 
 export type UserRole = 'admin' | 'agent';
 
@@ -18,9 +19,7 @@ export interface AgentUser {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly STORAGE_TOKEN = 'token';
-  private readonly STORAGE_ROLE = 'role';
-  private readonly STORAGE_USER_EMAIL = 'userEmail';
+  private readonly STORAGE_TOKEN = 'token'; // on garde un fake token pour compatibilité si besoin
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +31,7 @@ export class AuthService {
       const users = await firstValueFrom(this.http.get<AgentUser[]>('/assets/data/agents.json'));
 
       const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
       if (!user) {
         return { success: false, message: 'Email introuvable.' };
       }
@@ -40,10 +40,17 @@ export class AuthService {
         return { success: false, message: 'Mot de passe incorrect.' };
       }
 
-      // Stockage simple pour TP
-      localStorage.setItem(this.STORAGE_TOKEN, 'fake-token');
-      localStorage.setItem(this.STORAGE_ROLE, user.role);
-      localStorage.setItem(this.STORAGE_USER_EMAIL, user.email);
+      // On stocke l'utilisateur complet dans localStorage via la structure attendue par role-utils
+      const currentUser: CurrentUser = {
+        id: user.id,
+        nom: user.nom,
+        prenom: user.prenom,
+        email: user.email,
+        role: user.role
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      localStorage.setItem(this.STORAGE_TOKEN, 'fake-token-2025'); // garde un token pour isLoggedIn
 
       return { success: true, message: 'Connexion réussie', role: user.role };
     } catch (error) {
@@ -57,17 +64,17 @@ export class AuthService {
   }
 
   getRole(): UserRole | null {
-    const role = localStorage.getItem(this.STORAGE_ROLE);
-    return role === 'admin' || role === 'agent' ? (role as UserRole) : null;
+    const user = this.getCurrentUser();
+    return user?.role ?? null;
   }
 
-  getCurrentEmail(): string | null {
-    return localStorage.getItem(this.STORAGE_USER_EMAIL);
+  getCurrentUser(): CurrentUser | null {
+    const data = localStorage.getItem('currentUser');
+    return data ? JSON.parse(data) : null;
   }
 
   logout(): void {
     localStorage.removeItem(this.STORAGE_TOKEN);
-    localStorage.removeItem(this.STORAGE_ROLE);
-    localStorage.removeItem(this.STORAGE_USER_EMAIL);
+    localStorage.removeItem('currentUser');
   }
 }
