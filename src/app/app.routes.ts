@@ -46,7 +46,7 @@ export const routes: Routes = [
 { path: 'products', component: ProductList },
 { path: 'products/new', component: ProductForm },
 { path: 'products/edit/:id', component: ProductForm },
-{ path: 'products/:id', component: ProductDetails },
+
 { path: 'dash_admin', component: DashboardAdmin },
 { path: 'dash_agent', component: DashboardAgent },
 

@@ -1,9 +1,26 @@
-<h3>Graphiques</h3>
+<!-- graphs.html -->
+<div class="graphs-container">
+  
 
-<h4>Stock : En stock vs Rupture</h4>
-<canvas id="stockChart" width="300" height="200"></canvas>
+  <div class="charts-grid">
+    <mat-card class="chart-card">
+      <mat-card-header><mat-card-title>Produits en stock par catégorie</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #barCanvas></canvas></mat-card-content>
+    </mat-card>
 
-<hr>
+    <mat-card class="chart-card">
+      <mat-card-header><mat-card-title>Produits en rupture</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #doughnutCanvas></canvas></mat-card-content>
+    </mat-card>
 
-<h4>Produits par catégorie</h4>
-<canvas id="categoryChart" width="300" height="200"></canvas>
+    <mat-card class="chart-card">
+      <mat-card-header><mat-card-title>Fournisseurs par région</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #pieSuppliersCanvas></canvas></mat-card-content>
+    </mat-card>
+
+    <mat-card class="chart-card">
+      <mat-card-header><mat-card-title>Clients par région</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #pieClientsCanvas></canvas></mat-card-content>
+    </mat-card>
+  </div>
+</div>

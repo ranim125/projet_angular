@@ -83,10 +83,10 @@ export class SupplierForm implements OnInit {
   this.supplierService.add(data);
 }
 
-    this.router.navigate(['/entities/suppliers']);
-  }
+this.goBack();  }
 
-  cancel(): void {
-    this.router.navigate(['/entities/suppliers']);
-  }
+  
+  goBack(): void {
+  window.history.back();
+}
 }
