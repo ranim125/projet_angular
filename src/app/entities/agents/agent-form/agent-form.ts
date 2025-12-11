@@ -69,10 +69,10 @@ export class AgentForm implements OnInit {
       this.agentService.add(data);
     }
 
-    this.router.navigate(['/entities/agents']);
-  }
+this.goBack();  }
 
-  cancel(): void {
-    this.router.navigate(['/entities/agents']);
-  }
+ 
+  goBack(): void {
+  window.history.back();
+}
 }

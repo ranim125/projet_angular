@@ -1,0 +1,44 @@
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.stat-card {
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: scale(1.05);
+}
+
+.stat-card.primary {
+  background-color: #5871ff;
+  color: white;
+}
+
+.stat-card.accent {
+  background-color: #40ff4a;
+  color: white;
+}
+
+.stat-card.warn {
+  background-color: #f44336;
+  color: white;
+}
+
+.mat-card-header {
+  justify-content: center;
+}
+
+.mat-card-title {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 32px;
+  margin: 0;
+}

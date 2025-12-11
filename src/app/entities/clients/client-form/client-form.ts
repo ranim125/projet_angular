@@ -76,10 +76,10 @@ export class ClientForm implements OnInit {
       this.clientService.add(data);
     }
 
-    this.router.navigate(['/entities/clients']);
-  }
+this.goBack();  }
 
-  cancel(): void {
-    this.router.navigate(['/entities/clients']);
-  }
+  
+  goBack(): void {
+  window.history.back();
+}
 }

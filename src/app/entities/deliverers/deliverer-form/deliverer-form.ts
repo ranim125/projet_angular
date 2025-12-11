@@ -79,10 +79,10 @@ export class DelivererForm implements OnInit {
       this.delivererService.add(data);
     }
 
-    this.router.navigate(['/entities/deliverers']);
-  }
+this.goBack();  }
 
-  cancel(): void {
-    this.router.navigate(['/entities/deliverers']);
-  }
+  
+  goBack(): void {
+  window.history.back();
+}
 }

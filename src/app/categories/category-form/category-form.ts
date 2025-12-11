@@ -19,7 +19,7 @@ import { CategoryService, Category } from '../category-service/category-service'
     MatButtonModule
   ],
   templateUrl: './category-form.html',
-  styleUrl: './category-form.css'
+  styleUrls: ['./category-form.css']
 })
 export class CategoryForm implements OnInit {
   form!: FormGroup;
@@ -58,10 +58,9 @@ export class CategoryForm implements OnInit {
       this.categoryService.add(name);
     }
 
-    this.router.navigate(['/categories']);
-  }
+this.goBack();  }
 
-  cancel() {
-    this.router.navigate(['/categories']);
-  }
+  goBack(): void {
+  window.history.back();
+}
 }

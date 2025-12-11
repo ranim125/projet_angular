@@ -74,10 +74,10 @@ export class ProductForm implements OnInit {
       this.productService.add(data);
     }
 
-    this.router.navigate(['/entities/products']);
-  }
+this.goBack();  }
 
-  cancel(): void {
-    this.router.navigate(['/entities/products']);
-  }
+  
+  goBack(): void {
+  window.history.back();
+}
 }
