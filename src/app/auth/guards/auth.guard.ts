@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { getCurrentUser } from '../../shared/role-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    if (!this.authService.isLoggedIn()) {
+    const user = getCurrentUser();
+    if (!user) {
       this.router.navigate(['/login']);
       return false;
     }
 
     const expectedRole = route.data['role'] as 'admin' | 'agent' | undefined;
-    const currentRole = this.authService.getRole();
-
-    if (expectedRole && currentRole && currentRole !== expectedRole) {
-      this.router.navigate([currentRole === 'admin' ? '/admin' : '/agent']);
+    if (expectedRole && user.role !== expectedRole) {
+      this.router.navigate([user.role === 'admin' ? '/admin' : '/agent']);
       return false;
     }
 
