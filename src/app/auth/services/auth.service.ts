@@ -19,7 +19,7 @@ export interface AgentUser {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly STORAGE_TOKEN = 'token'; // on garde un fake token pour compatibilité si besoin
+  private readonly STORAGE_TOKEN = 'token'; // fake token pour compatibilité
 
   constructor(private http: HttpClient) {}
 
@@ -40,17 +40,18 @@ export class AuthService {
         return { success: false, message: 'Mot de passe incorrect.' };
       }
 
-      // On stocke l'utilisateur complet dans localStorage via la structure attendue par role-utils
       const currentUser: CurrentUser = {
         id: user.id,
         nom: user.nom,
         prenom: user.prenom,
         email: user.email,
-        role: user.role
+        role: user.role,
+        telephone: user.telephone  // AJOUT : on stocke maintenant le téléphone
       };
 
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      localStorage.setItem(this.STORAGE_TOKEN, 'fake-token-2025'); // garde un token pour isLoggedIn
+      // CHANGÉ : sessionStorage au lieu de localStorage
+      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      sessionStorage.setItem(this.STORAGE_TOKEN, 'fake-token-2025');
 
       return { success: true, message: 'Connexion réussie', role: user.role };
     } catch (error) {
@@ -60,7 +61,8 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.STORAGE_TOKEN);
+    // CHANGÉ : sessionStorage
+    return !!sessionStorage.getItem(this.STORAGE_TOKEN);
   }
 
   getRole(): UserRole | null {
@@ -69,12 +71,14 @@ export class AuthService {
   }
 
   getCurrentUser(): CurrentUser | null {
-    const data = localStorage.getItem('currentUser');
+    // CHANGÉ : sessionStorage
+    const data = sessionStorage.getItem('currentUser');
     return data ? JSON.parse(data) : null;
   }
 
   logout(): void {
-    localStorage.removeItem(this.STORAGE_TOKEN);
-    localStorage.removeItem('currentUser');
+    // CHANGÉ : sessionStorage
+    sessionStorage.removeItem(this.STORAGE_TOKEN);
+    sessionStorage.removeItem('currentUser');
   }
 }

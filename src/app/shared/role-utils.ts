@@ -4,10 +4,12 @@ export interface CurrentUser {
   prenom: string;
   email: string;
   role: 'admin' | 'agent';
+  telephone?: string;  // AJOUT : champ optionnel (car certains utilisateurs pourraient ne pas l'avoir)
 }
 
 export const getCurrentUser = (): CurrentUser | null => {
-  const data = localStorage.getItem('currentUser');
+  // CHANGÉ : sessionStorage au lieu de localStorage
+  const data = sessionStorage.getItem('currentUser');
   return data ? JSON.parse(data) : null;
 };
 
