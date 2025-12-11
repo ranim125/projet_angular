@@ -1,26 +1,24 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { getCurrentUser } from '../../shared/role-utils';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth-service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
+export const AuthGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(route: ActivatedRouteSnapshot): boolean {
-    const user = getCurrentUser();
-    if (!user) {
-      this.router.navigate(['/login']);
-      return false;
-    }
-
-    const expectedRole = route.data['role'] as 'admin' | 'agent' | undefined;
-    if (expectedRole && user.role !== expectedRole) {
-      this.router.navigate([user.role === 'admin' ? '/admin' : '/agent']);
-      return false;
-    }
-
-    return true;
+  if (!authService.isLoggedIn()) {
+    router.navigate(['/login']);
+    return false;
   }
-}
+
+  const userRole = authService.getRole();
+  const expectedRole = route.data['expectedRole'] as string;
+
+  // Si la route attend un rôle précis et que l'utilisateur n'a pas le bon rôle → on le redirige vers son bon dashboard
+  if (expectedRole && userRole !== expectedRole) {
+    router.navigate(['/dashboard']);
+    return false;
+  }
+
+  return true;
+};

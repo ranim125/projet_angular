@@ -19,13 +19,22 @@ export const routes: Routes = [
       { path: 'admin', redirectTo: '/dashboard', pathMatch: 'full' },
       { path: 'agent', redirectTo: '/dashboard', pathMatch: 'full' },
 
-      // Dashboard commun (admin voit graphs, agent non → géré dans le composant)
+      
+            // ==================== DASHBOARD ====================
+      // Admin → dashboard complet (avec graphs)
       {
         path: 'dashboard',
         loadComponent: () => import('./dashboard/dashboard-admin/dashboard-admin')
-          .then(m => m.DashboardAdmin)
+          .then(m => m.DashboardAdmin),
+        data: { expectedRole: 'admin' }
       },
-
+      // Agent → dashboard simplifié (sans graphs)
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./dashboard/dashboard-agent/dashboard-agent')
+          .then(m => m.DashboardAgent),
+        data: { expectedRole: 'agent' }
+      },
       // Profil
       {
         path: 'profile',
