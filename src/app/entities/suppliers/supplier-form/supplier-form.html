@@ -1,45 +1,81 @@
-
-<h2>{{ isEdit ? 'Modifier le fournisseur' : 'Nouveau fournisseur' }}</h2>
+<div class="form-header">
+  <h2>{{ isEdit ? 'Modifier le fournisseur' : 'Nouveau fournisseur' }}</h2>
+  <mat-icon class="form-icon">{{ isEdit ? 'edit' : 'add_circle' }}</mat-icon>
+</div>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="supplier-form">
 
   <mat-form-field appearance="outline">
     <mat-label>Nom / Raison sociale</mat-label>
-    <input matInput formControlName="nom" required />
-    <mat-error *ngIf="form.get('nom')?.hasError('required')">Obligatoire</mat-error>
+    <input matInput formControlName="nom" placeholder="Nom de l'entreprise" required />
+    <mat-icon matPrefix>business</mat-icon>
+    <mat-error *ngIf="form.get('nom')?.hasError('required')">
+      Le nom est obligatoire
+    </mat-error>
+    <mat-error *ngIf="form.get('nom')?.hasError('minlength')">
+      Minimum 2 caractères
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Adresse complète</mat-label>
-    <input matInput formControlName="adresse" required />
-    <mat-error *ngIf="form.get('adresse')?.hasError('required')">Obligatoire</mat-error>
+    <textarea matInput formControlName="adresse" rows="2" placeholder="Adresse complète" required></textarea>
+    <mat-icon matPrefix>location_on</mat-icon>
+    <mat-error *ngIf="form.get('adresse')?.hasError('required')">
+      L'adresse est obligatoire
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Téléphone</mat-label>
-    <input matInput formControlName="telephone" placeholder="06xx xxx xxx" />
-    <mat-error *ngIf="form.get('telephone')?.hasError('pattern')">Format marocain requis</mat-error>
+    <input matInput formControlName="telephone" placeholder="06 12 34 56 78" required />
+    <mat-icon matPrefix>phone</mat-icon>
+    <mat-error *ngIf="form.get('telephone')?.hasError('required')">
+      Le téléphone est obligatoire
+    </mat-error>
+    <mat-error *ngIf="form.get('telephone')?.hasError('minlength')">
+      10 chiffres minimum
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email" required />
-    <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalide</mat-error>
+    <input matInput type="email" formControlName="email" placeholder="contact@entreprise.com" required />
+    <mat-icon matPrefix>email</mat-icon>
+    <mat-error *ngIf="form.get('email')?.hasError('required')">
+      L'email est obligatoire
+    </mat-error>
+    <mat-error *ngIf="form.get('email')?.hasError('email')">
+      Format d'email invalide
+    </mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="full-width">
     <mat-label>Région</mat-label>
-    <input matInput formControlName="region" />
+    <input matInput formControlName="region" placeholder="Casablanca, Rabat, etc." required />
+    <mat-icon matPrefix>map</mat-icon>
+    <mat-error *ngIf="form.get('region')?.hasError('required')">
+      La région est obligatoire
+    </mat-error>
   </mat-form-field>
 
   <div class="actions">
-    <button 
-  mat-raised-button 
-  color="primary" 
-  type="submit" 
-  [disabled]="form.invalid || !isAdmin">
-  {{ isEdit ? 'Enregistrer' : 'Ajouter' }}
-</button>
-    <button mat-button type="button" (click)="goBack()">Annuler</button>
+    <button mat-button class="btn-cancel rounded-btn" type="button" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Annuler
+    </button>
+    <button mat-raised-button class="btn-submit rounded-btn" type="submit" 
+            [disabled]="form.invalid || !isAdmin">
+      <mat-icon>{{ isEdit ? 'save' : 'add' }}</mat-icon>
+      {{ isEdit ? 'Enregistrer' : 'Ajouter le fournisseur' }}
+    </button>
   </div>
+
+  <div *ngIf="!isAdmin" class="warning">
+    <mat-icon>lock</mat-icon>
+    <div class="warning-content">
+      <h3>Mode lecture seule</h3>
+      <p>Vous êtes connecté en tant qu'agent. Seuls les administrateurs peuvent modifier les fournisseurs.</p>
+    </div>
+  </div>
+
 </form>

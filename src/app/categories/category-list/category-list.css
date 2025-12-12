@@ -1,0 +1,289 @@
+/* Variables de palette */
+:root {
+  --deep-space-blue: #162C44;
+  --tropical-mint: #29F0B5;
+  --charcoal: #515659;
+  --platinum: #F1F1F1;
+  --chartreuse: #BAEF17;
+  --light-coral: #EE8781;
+  --tuscan-sun: #F3C150;
+  --dust-grey: #D0CFCC;
+  --mint-light: rgba(41, 240, 181, 0.1);
+  --blue-light: rgba(22, 44, 68, 0.1);
+  --coral-light: rgba(238, 135, 129, 0.1);
+}
+
+/* Conteneur principal */
+:host {
+  display: block;
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #f1f1f1 100%);
+  min-height: calc(100vh - 110px);
+}
+
+/* En-tête avec filtres */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Bouton Ajouter - ARRONDI comme produits */
+.btn-primary.rounded-full {
+  background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%) !important;
+  color: white !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 0 28px 0 20px !important;
+  height: 52px;
+  border-radius: 9999px !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 15px rgba(22, 44, 68, 0.2) !important;
+}
+
+.btn-primary.rounded-full:hover {
+  background: linear-gradient(135deg, var(--tropical-mint) 0%, #2cf8c1 100%) !important;
+  color: var(--deep-space-blue) !important;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(41, 240, 181, 0.4) !important;
+}
+
+.btn-primary.rounded-full mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+/* Champs de recherche */
+.search {
+  min-width: 200px;
+  flex: 1;
+}
+
+/* Style des champs de formulaire */
+.search ::ng-deep .mat-mdc-text-field-wrapper {
+  background: white !important;
+  border-radius: 12px !important;
+}
+
+.search ::ng-deep .mat-mdc-form-field-outline {
+  border-color: rgba(81, 86, 89, 0.2) !important;
+  border-radius: 12px !important;
+}
+
+.search ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
+  border-color: var(--tropical-mint) !important;
+  border-width: 2px !important;
+}
+
+/* Tableau */
+.rounded-table {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* En-tête du tableau */
+th.mat-header-cell {
+  background: var(--deep-space-blue) !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 16px !important;
+  border-bottom: none !important;
+  text-align: center !important;
+}
+
+.actions-header {
+  text-align: center !important;
+}
+
+/* Cellules - ALIGNEMENT CORRIGÉ */
+td.mat-cell {
+  padding: 16px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  color: var(--charcoal);
+  font-size: 14px;
+  vertical-align: middle !important;
+  height: 70px !important;
+  min-height: 70px !important;
+}
+
+/* Alignement spécifique pour chaque colonne */
+td.mat-cell:nth-child(1) { /* ID */
+  text-align: center;
+}
+
+td.mat-cell:nth-child(2) { /* Nom */
+  text-align: left;
+}
+
+td.mat-cell:last-child { /* Actions */
+  text-align: center;
+  padding: 8px 16px !important;
+}
+
+/* Badge ID arrondi */
+.id-badge.rounded-full {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--tuscan-sun) 0%, #f6ca6c 100%);
+  color: var(--deep-space-blue);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 8px rgba(243, 193, 80, 0.2);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Lignes alternées */
+tr.mat-row:nth-child(even) {
+  background: rgba(241, 241, 241, 0.3);
+}
+
+tr.mat-row:hover {
+  background: rgba(41, 240, 181, 0.05) !important;
+  transform: scale(1.002);
+  transition: transform 0.2s ease;
+}
+
+/* Colonne Actions - ALIGNEMENT CORRIGÉ */
+.actions-cell {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+  min-height: 70px !important;
+  width: 100% !important;
+}
+
+/* Boutons d'actions arrondis - ICÔNES SEULES */
+.actions-cell .rounded-full {
+  border-radius: 9999px !important;
+  width: 44px !important;
+  height: 44px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-edit.rounded-full {
+  background: var(--blue-light) !important;
+  color: var(--deep-space-blue) !important;
+  border: 2px solid var(--deep-space-blue) !important;
+}
+
+.btn-edit.rounded-full:hover {
+  background: var(--deep-space-blue) !important;
+  color: white !important;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(22, 44, 68, 0.3);
+}
+
+.btn-delete.rounded-full {
+  background: var(--coral-light) !important;
+  color: var(--light-coral) !important;
+  border: 2px solid var(--light-coral) !important;
+}
+
+.btn-delete.rounded-full:hover {
+  background: var(--light-coral) !important;
+  color: white !important;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(238, 135, 129, 0.3);
+}
+
+/* Paginateur */
+.rounded-paginator {
+  margin-top: 20px;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+::ng-deep .rounded-paginator .mat-mdc-paginator {
+  background: transparent !important;
+}
+
+::ng-deep .rounded-paginator .mat-mdc-paginator-page-size-label {
+  color: var(--charcoal);
+}
+
+::ng-deep .rounded-paginator .mat-mdc-paginator-range-label {
+  color: var(--charcoal);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .btn-primary.rounded-full {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search {
+    width: 100%;
+  }
+  
+  .actions-cell {
+    gap: 4px !important;
+  }
+  
+  .actions-cell .rounded-full {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions-cell {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .actions-cell .rounded-full {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  td.mat-cell {
+    height: auto !important;
+    min-height: 60px !important;
+    padding: 12px 8px !important;
+  }
+  
+  .id-badge.rounded-full {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+}

@@ -13,7 +13,7 @@ import { GraphsComponent } from '../graphs/graphs';
     GraphsComponent
   ],
   templateUrl: './dashboard-admin.html',
-  styleUrls: ['../dashboard.css'] // optionnel, si tu veux du style
+  styleUrls: ['../dashboard.css']
 })
 export class DashboardAdmin implements OnInit {
 

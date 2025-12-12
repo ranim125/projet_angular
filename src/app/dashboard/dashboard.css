@@ -1,35 +1,78 @@
-/* src/app/dashboard/dashboard.css */
+/* Variables de palette */
+:root {
+  --deep-space-blue: #162C44;
+  --tropical-mint: #29F0B5;
+  --charcoal: #515659;
+  --platinum: #F1F1F1;
+  --chartreuse: #BAEF17;
+  --light-coral: #EE8781;
+  --wheat: #FBE6BF;
+  --tuscan-sun: #F3C150;
+  --dust-grey: #D0CFCC;
+}
+
+/* Dashboard wrapper */
 .dashboard-wrapper {
-  padding: 24px;
-  max-width: 1400px;
+  padding: 20px;
+  max-width: 1600px;
   margin: 0 auto;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 110px);
 }
 
+/* Titre principal */
 .page-title {
-  text-align: center;
-  color: #3f51b5;
+  text-align: left;
+  color: var(--deep-space-blue);
   margin: 0 0 32px 0;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 2.2rem;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 12px;
 }
 
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: var(--tropical-mint);
+  border-radius: 2px;
+}
+
+/* Sections */
 .stats-section {
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .graphs-section {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-  .dashboard-wrapper { padding: 16px; }
-  .page-title { font-size: 1.8rem; }
+  .dashboard-wrapper { 
+    padding: 16px; 
+  }
+  
+  .page-title { 
+    font-size: 1.8rem; 
+    margin-bottom: 24px;
+  }
+  
+  .stats-section,
+  .graphs-section {
+    padding: 20px;
+  }
 }

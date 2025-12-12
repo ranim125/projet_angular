@@ -1,14 +1,13 @@
-
-
 <div class="header">
 
-  <button mat-raised-button color="primary" (click)="goToAdd()">
-    Ajouter un produit
+  <button mat-raised-button class="btn-primary rounded-full" (click)="goToAdd()">
+    <mat-icon>add</mat-icon> Ajouter un produit
   </button>
 
   <mat-form-field appearance="outline" class="search">
     <mat-label>Rechercher</mat-label>
     <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Nom..." />
+    <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="search">
@@ -19,6 +18,7 @@
         {{ c.name }}
       </mat-option>
     </mat-select>
+    <mat-icon matSuffix>category</mat-icon>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="search">
@@ -28,14 +28,21 @@
       <mat-option value="in">En stock</mat-option>
       <mat-option value="out">Rupture</mat-option>
     </mat-select>
+    <mat-icon matSuffix>inventory_2</mat-icon>
   </mat-form-field>
 
-  <button mat-button (click)="sortPriceAsc()">Prix ↑</button>
-  <button mat-button (click)="sortPriceDesc()">Prix ↓</button>
+  <div class="sort-buttons">
+    <button mat-button class="sort-btn rounded-full" (click)="sortPriceAsc()">
+      <mat-icon>arrow_upward</mat-icon> Prix ↑
+    </button>
+    <button mat-button class="sort-btn rounded-full" (click)="sortPriceDesc()">
+      <mat-icon>arrow_downward</mat-icon> Prix ↓
+    </button>
+  </div>
 
 </div>
 
-<table mat-table [dataSource]="filteredAndPaged" class="mat-elevation-z2">
+<table mat-table [dataSource]="filteredAndPaged" class="mat-elevation-z2 rounded-table">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Nom </th>
@@ -44,7 +51,9 @@
 
   <ng-container matColumnDef="price">
     <th mat-header-cell *matHeaderCellDef> Prix </th>
-    <td mat-cell *matCellDef="let p"> {{p.price}} DT </td>
+    <td mat-cell *matCellDef="let p"> 
+      <span class="price-badge rounded-full">{{p.price | number:'1.2-2'}} DT</span>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="category">
@@ -55,16 +64,25 @@
   <ng-container matColumnDef="stock">
     <th mat-header-cell *matHeaderCellDef> Stock </th>
     <td mat-cell *matCellDef="let p">
-      {{ p.inStock ? 'En stock' : 'Rupture' }}
+      <span class="stock-badge rounded-full" [class.in-stock]="p.inStock" [class.out-stock]="!p.inStock">
+        <mat-icon>{{ p.inStock ? 'check_circle' : 'cancel' }}</mat-icon>
+        {{ p.inStock ? 'En stock' : 'Rupture' }}
+      </span>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> Actions </th>
-    <td mat-cell *matCellDef="let p">
-      <button matButton (click)="viewDetails(p)">Détails</button>
-      <button matButton (click)="edit(p)">Modifier</button>
-      <button matButton color="warn" (click)="delete(p.id)">Supprimer</button>
+    <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
+    <td mat-cell *matCellDef="let p" class="actions-cell">
+      <button mat-icon-button class="btn-details rounded-full" (click)="viewDetails(p)" matTooltip="Voir les détails">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button class="btn-edit rounded-full" (click)="edit(p)" matTooltip="Modifier">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button class="btn-delete rounded-full" (click)="delete(p.id)" matTooltip="Supprimer">
+        <mat-icon>delete</mat-icon>
+      </button>
     </td>
   </ng-container>
 
@@ -77,25 +95,60 @@
   [length]="totalItems"
   [pageSize]="pageSize"
   [pageSizeOptions]="[5, 10, 20]"
-  (page)="onPageChange($event)">
+  (page)="onPageChange($event)"
+  class="rounded-paginator">
 </mat-paginator>
 
 <!-- Modal détails -->
 <div *ngIf="selectedProduct" class="details-backdrop">
   <mat-card class="details-card">
 
-    <mat-card-title>{{ selectedProduct.name }}</mat-card-title>
+    <div class="details-header">
+      <mat-icon class="details-icon">inventory</mat-icon>
+      <mat-card-title>{{ selectedProduct.name }}</mat-card-title>
+    </div>
 
     <mat-card-content>
-      <p><b>Prix :</b> {{ selectedProduct.price }} DT</p>
-      <p><b>Catégorie :</b> {{ getCategoryName(selectedProduct.categoryId) }}</p>
-      <p><b>Stock :</b> {{ selectedProduct.inStock ? 'En stock' : 'Rupture' }}</p>
-      <p><b>Description :</b> {{ selectedProduct.description }}</p>
+      <div class="detail-item">
+        <mat-icon>attach_money</mat-icon>
+        <div>
+          <span class="detail-label">Prix :</span>
+          <span class="detail-value price-badge rounded-full">{{ selectedProduct.price | number:'1.2-2' }} DT</span>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <mat-icon>category</mat-icon>
+        <div>
+          <span class="detail-label">Catégorie :</span>
+          <span class="detail-value">{{ getCategoryName(selectedProduct.categoryId) }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <mat-icon>inventory_2</mat-icon>
+        <div>
+          <span class="detail-label">Stock :</span>
+          <span class="detail-value stock-badge rounded-full" [class.in-stock]="selectedProduct.inStock" 
+                [class.out-stock]="!selectedProduct.inStock">
+            <mat-icon>{{ selectedProduct.inStock ? 'check_circle' : 'cancel' }}</mat-icon>
+            {{ selectedProduct.inStock ? 'En stock' : 'Rupture' }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="detail-item full-width">
+        <mat-icon>description</mat-icon>
+        <div>
+          <span class="detail-label">Description :</span>
+          <p class="detail-description">{{ selectedProduct.description }}</p>
+        </div>
+      </div>
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-button color="primary" (click)="closeDetails()">
-        Fermer
+      <button mat-button class="btn-close" (click)="closeDetails()">
+        <mat-icon>close</mat-icon> Fermer
       </button>
     </mat-card-actions>
 

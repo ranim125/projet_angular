@@ -9,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
 
 import { AgentService, Agent } from '../agent-service/agent-service';
 
@@ -23,24 +25,28 @@ import { AgentService, Agent } from '../agent-service/agent-service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatCardModule
   ],
   templateUrl: './agent-list.html',
   styleUrl: './agent-list.css'
 })
 export class AgentList implements OnInit {
 
-  displayedColumns: string[] = ['id', 'nom', 'prenom', 'email', 'telephone', 'role', 'actions'];
-
+  displayedColumns: string[] = ['id', 'fullName', 'telephone', 'role', 'actions'];
   allAgents: Agent[] = [];
   filteredAgents: Agent[] = [];
+  filteredAndPaged: Agent[] = [];
 
   searchNom = '';
   filterRole = '';
-
+  
   pageIndex = 0;
   pageSize = 10;
-  total = 0;
+  totalItems = 0;
+
+  selectedAgent: Agent | null = null;
 
   constructor(
     private agentService: AgentService,
@@ -56,37 +62,58 @@ export class AgentList implements OnInit {
     this.applyFilters();
   }
 
+  onSearch(): void {
+    this.pageIndex = 0;
+    this.applyFilters();
+  }
+
   applyFilters(): void {
     let temp = [...this.allAgents];
 
+    // Filtre par recherche nom/prénom
     if (this.searchNom.trim()) {
-      const t = this.searchNom.toLowerCase();
+      const term = this.searchNom.toLowerCase();
       temp = temp.filter(a =>
-        a.nom.toLowerCase().includes(t) ||
-        a.prenom.toLowerCase().includes(t)
+        a.nom.toLowerCase().includes(term) ||
+        a.prenom.toLowerCase().includes(term)
       );
     }
 
+    // Filtre par rôle
     if (this.filterRole.trim()) {
       temp = temp.filter(a =>
         a.role.toLowerCase().includes(this.filterRole.toLowerCase())
       );
     }
 
-    this.total = temp.length;
+    this.filteredAgents = temp;
+    this.totalItems = temp.length;
+    this.paginateAgents();
+  }
+
+  paginateAgents(): void {
     const start = this.pageIndex * this.pageSize;
-    this.filteredAgents = temp.slice(start, start + this.pageSize);
+    const end = start + this.pageSize;
+    this.filteredAndPaged = this.filteredAgents.slice(start, end);
   }
 
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.applyFilters();
+    this.paginateAgents();
   }
 
-  resetPageAndFilter(): void {
-    this.pageIndex = 0;
-    this.applyFilters();
+  sortByName(): void {
+    this.filteredAgents.sort((a, b) => a.nom.localeCompare(b.nom));
+    this.paginateAgents();
+  }
+
+  viewDetails(agent: Agent): void {
+    this.selectedAgent = agent;
+  }
+
+  closeDetails(): void {
+    this.selectedAgent = null;
   }
 
   edit(id: number): void {
@@ -94,7 +121,7 @@ export class AgentList implements OnInit {
   }
 
   delete(id: number): void {
-    if (confirm('Supprimer cet agent ?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet agent ?')) {
       this.agentService.delete(id);
       this.loadAgents();
     }

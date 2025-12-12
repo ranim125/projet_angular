@@ -1,5 +1,3 @@
-// src/app/entities/clients/client-list/client-list.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
 
 import { ClientService, Client } from '../client-service/client-service';
 import { isAdmin } from '../../../shared/role-utils';
@@ -26,24 +26,28 @@ import { isAdmin } from '../../../shared/role-utils';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatCardModule
   ],
   templateUrl: './client-list.html',
   styleUrl: './client-list.css'
 })
 export class ClientList implements OnInit {
 
-  displayedColumns: string[] = ['id', 'nom', 'prenom', 'telephone', 'adresse', 'actions'];
-
+  displayedColumns: string[] = ['id', 'fullName', 'telephone', 'adresse', 'actions'];
   allClients: Client[] = [];
   filteredClients: Client[] = [];
+  filteredAndPaged: Client[] = [];
 
   searchNom = '';
   filterAdresse = '';
-
+  
   pageIndex = 0;
   pageSize = 10;
-  total = 0;
+  totalItems = 0;
+
+  selectedClient: Client | null = null;
 
   constructor(
     private clientService: ClientService,
@@ -59,9 +63,15 @@ export class ClientList implements OnInit {
     this.applyFilters();
   }
 
+  onSearch(): void {
+    this.pageIndex = 0;
+    this.applyFilters();
+  }
+
   applyFilters(): void {
     let temp = [...this.allClients];
 
+    // Filtre par recherche nom/prénom
     if (this.searchNom.trim()) {
       const term = this.searchNom.toLowerCase();
       temp = temp.filter(c =>
@@ -70,44 +80,62 @@ export class ClientList implements OnInit {
       );
     }
 
+    // Filtre par adresse
     if (this.filterAdresse.trim()) {
       temp = temp.filter(c =>
         c.adresse.toLowerCase().includes(this.filterAdresse.toLowerCase())
       );
     }
 
-    this.total = temp.length;
+    this.filteredClients = temp;
+    this.totalItems = temp.length;
+    this.paginateClients();
+  }
+
+  paginateClients(): void {
     const start = this.pageIndex * this.pageSize;
-    this.filteredClients = temp.slice(start, start + this.pageSize);
+    const end = start + this.pageSize;
+    this.filteredAndPaged = this.filteredClients.slice(start, end);
   }
 
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.applyFilters();
+    this.paginateClients();
   }
 
-  resetPageAndFilter(): void {
-    this.pageIndex = 0;
-    this.applyFilters();
+  sortByName(): void {
+    this.filteredClients.sort((a, b) => a.nom.localeCompare(b.nom));
+    this.paginateClients();
+  }
+
+  viewDetails(client: Client): void {
+    this.selectedClient = client;
+  }
+
+  closeDetails(): void {
+    this.selectedClient = null;
   }
 
   edit(id: number): void {
-    this.router.navigate(['/entities/clients/edit', id]);
+    if (this.isAdmin) {
+      this.router.navigate(['/entities/clients/edit', id]);
+    }
   }
 
   delete(id: number): void {
-    if (confirm('Supprimer ce client ?') && isAdmin()) {
+    if (this.isAdmin && confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
       this.clientService.delete(id);
       this.loadClients();
     }
   }
 
   goToAdd(): void {
-    this.router.navigate(['/entities/clients/add']);
+    if (this.isAdmin) {
+      this.router.navigate(['/entities/clients/add']);
+    }
   }
 
-  // Pour le template
   get isAdmin(): boolean {
     return isAdmin();
   }

@@ -1,16 +1,23 @@
 <div class="login-page">
-  <div class="login-container">
-    <div class="login-card">
-      <div class="logo">
-        <mat-icon class="big-icon">warehouse</mat-icon>
-        <h1>Gest-Depot</h1>
-        <p class="subtitle">Gestion de dépôt & stock</p>
+  <!-- Carte divisée en 2 -->
+  <div class="login-card">
+    <!-- Partie gauche - Formulaire -->
+    <div class="form-section">
+      <div class="login-header">
+        <mat-icon class="login-icon">groups</mat-icon>
+        <h2 class="form-title">CONNEXION</h2>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="ex: admin@depot.ma" autocomplete="email">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label style="display: none">Adresse email</mat-label>
+          <input 
+            matInput 
+            formControlName="email" 
+            type="email" 
+            autocomplete="email"
+            placeholder="Adresse email">
+          <mat-icon matPrefix class="field-icon">email</mat-icon>
           <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
             L'email est obligatoire
           </mat-error>
@@ -19,10 +26,21 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Mot de passe</mat-label>
-          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" autocomplete="current-password">
-          <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label style="display: none">Mot de passe</mat-label>
+          <input 
+            matInput 
+            formControlName="password" 
+            [type]="hidePassword ? 'password' : 'text'" 
+            autocomplete="current-password"
+            placeholder="Mot de passe">
+          <mat-icon matPrefix class="field-icon">lock</mat-icon>
+          <button 
+            type="button" 
+            mat-icon-button 
+            matSuffix 
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="hidePassword ? 'Afficher le mot de passe' : 'Cacher le mot de passe'">
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
@@ -33,31 +51,52 @@
           </mat-error>
         </mat-form-field>
 
-        <div class="error-message" *ngIf="errorMessage">
+        <div class="attempts-info" *ngIf="getAttempts() > 0 && !isBlocked">
+          <mat-icon>warning</mat-icon>
+          <span>Tentative {{ getAttempts() }}/{{ MAX_ATTEMPTS }}</span>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage && !isBlocked">
           <mat-icon>error_outline</mat-icon>
           <span>{{ errorMessage }}</span>
         </div>
 
         <div class="blocked-message" *ngIf="isBlocked">
-          <mat-icon color="warn">lock_clock</mat-icon>
+          <mat-icon>lock_clock</mat-icon>
           <span>
             Trop de tentatives. Compte bloqué pendant {{ blockRemainingSeconds }} secondes.
           </span>
         </div>
 
         <button
-          mat-raised-button
-          color="primary"
+          mat-stroked-button
           type="submit"
           class="login-btn"
           [disabled]="loginForm.invalid || isLoading || isBlocked">
           <span *ngIf="!isLoading">Se connecter</span>
           <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
         </button>
-      </form>
 
-      <div class="footer">
-        <small>© 2025 Gest-Depot — Tous droits réservés</small>
+        <div class="forgot-password">
+          <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Partie droite - Welcome -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <div class="brand-container">
+          <div class="welcome-text">
+            <h1 class="welcome-title">Bienvenue dans</h1>
+          </div>
+          <div class="logo-brand-wrapper">
+            <img src="assets/logo.gif" alt="Logo GestDepot" class="logo-image">
+            <div class="brand-text">
+              <h1 class="brand-title">GEST<span class="depot-text">DEPOT</span></h1>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -9,8 +10,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ProductService, Product } from '../product-service/product-service';
+import { CategoryService, Category } from '../../categories/category-service/category-service';
 
 @Component({
   selector: 'app-product-list',
@@ -18,13 +22,16 @@ import { ProductService, Product } from '../product-service/product-service';
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'
@@ -36,7 +43,7 @@ export class ProductList implements OnInit {
   allProducts: Product[] = [];
   filteredAndPaged: Product[] = [];
 
-  categories: any[] = [];
+  categories: Category[] = [];
 
   searchTerm = '';
   filterCategoryId: any = '';
@@ -48,10 +55,14 @@ export class ProductList implements OnInit {
 
   selectedProduct: Product | null = null;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.categories = JSON.parse(localStorage.getItem('categories') || '[]');
+    this.categories = this.categoryService.getAll();
     this.loadProducts();
   }
 
@@ -65,7 +76,8 @@ export class ProductList implements OnInit {
 
     if (this.searchTerm.trim()) {
       data = data.filter(p =>
-        p.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+        p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (p.description && p.description.toLowerCase().includes(this.searchTerm.toLowerCase()))
       );
     }
 
@@ -112,7 +124,7 @@ export class ProductList implements OnInit {
   }
 
   edit(prod: Product): void {
-    location.href = `/products/edit/${prod.id}`;
+    this.router.navigate(['/products/edit', prod.id]);
   }
 
   delete(id: number): void {
@@ -120,12 +132,10 @@ export class ProductList implements OnInit {
       this.productService.delete(id);
       this.loadProducts();
     }
-  
   }
 
   goToAdd(): void {
-    location.href = `/products/new`;
-    location.href = `/products/new`;
+    this.router.navigate(['/products/new']);
   }
 
   viewDetails(p: Product): void {

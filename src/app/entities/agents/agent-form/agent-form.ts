@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AgentService, Agent } from '../agent-service/agent-service';
 
@@ -17,7 +19,9 @@ import { AgentService, Agent } from '../agent-service/agent-service';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule
   ],
   templateUrl: './agent-form.html',
   styleUrl: './agent-form.css'
@@ -37,10 +41,10 @@ export class AgentForm implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
+      nom: ['', [Validators.required, Validators.minLength(2)]],
+      prenom: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      telephone: ['', Validators.required],
+      telephone: ['', [Validators.required, Validators.minLength(10)]],
       role: ['', Validators.required]
     });
 
@@ -56,10 +60,19 @@ export class AgentForm implements OnInit {
         }
       }
     }
+
+    // Définir une valeur par défaut pour le rôle si c'est une création
+    if (!this.isEdit && !this.form.get('role')?.value) {
+      this.form.get('role')?.setValue('Agent');
+    }
   }
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      // Toucher tous les champs pour afficher les erreurs
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const data = this.form.value as Omit<Agent, 'id'>;
 
@@ -69,10 +82,27 @@ export class AgentForm implements OnInit {
       this.agentService.add(data);
     }
 
-this.goBack();  }
+    this.goBack();
+  }
 
- 
   goBack(): void {
-  window.history.back();
-}
+    window.history.back();
+  }
+
+  // Méthode utilitaire pour obtenir les erreurs d'un champ
+  getErrorMessage(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    if (!control || !control.errors) return '';
+
+    if (control.hasError('required')) {
+      return 'Ce champ est obligatoire';
+    }
+    if (control.hasError('minlength')) {
+      return `Minimum ${control.errors['minlength'].requiredLength} caractères`;
+    }
+    if (control.hasError('email')) {
+      return 'Format d\'email invalide';
+    }
+    return '';
+  }
 }

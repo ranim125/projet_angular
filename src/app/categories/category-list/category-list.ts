@@ -1,12 +1,13 @@
-// src/app/categories/category-list/category-list.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon'; // AJOUTER CETTE LIGNE
+import { MatTooltipModule } from '@angular/material/tooltip'; // AJOUTER CETTE LIGNE
 import { FormsModule } from '@angular/forms';
 import { CategoryService, Category } from '../category-service/category-service';
 
@@ -16,11 +17,14 @@ import { CategoryService, Category } from '../category-service/category-service'
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule, // AJOUTER CETTE LIGNE
+    MatTooltipModule // AJOUTER CETTE LIGNE
   ],
   templateUrl: './category-list.html',
   styleUrls: ['./category-list.css']

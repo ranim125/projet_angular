@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+// Import des modules Material nécessaires
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon'; // AJOUT IMPORTANT
 
 import { ClientService, Client } from '../client-service/client-service';
 import { isAdmin } from '../../../shared/role-utils';
@@ -18,7 +20,8 @@ import { isAdmin } from '../../../shared/role-utils';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule, // AJOUTÉ ICI
   ],
   templateUrl: './client-form.html',
   styleUrl: './client-form.css'
@@ -35,6 +38,7 @@ export class ClientForm implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {}
+
   get isAdmin(): boolean {
     return isAdmin();
   }
@@ -76,10 +80,10 @@ export class ClientForm implements OnInit {
       this.clientService.add(data);
     }
 
-this.goBack();  }
+    this.goBack();
+  }
 
-  
   goBack(): void {
-  window.history.back();
-}
+    window.history.back();
+  }
 }

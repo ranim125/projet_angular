@@ -1,37 +1,106 @@
-<h2>{{ isEdit ? 'Modifier un agent' : 'Nouvel agent' }}</h2>
+<div class="form-header">
+  <h2>{{ isEdit ? 'Modifier l\'agent' : 'Nouvel agent' }}</h2>
+  <mat-icon class="form-icon">{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+</div>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Nom</mat-label>
-    <input matInput formControlName="nom">
-  </mat-form-field>
+  <div class="form-grid">
+    <!-- Nom -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="nom" placeholder="Dupont" required />
+      <mat-icon matPrefix>badge</mat-icon>
+      <mat-error *ngIf="form.get('nom')?.hasError('required')">
+        Le nom est obligatoire
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Prénom</mat-label>
-    <input matInput formControlName="prenom">
-  </mat-form-field>
+    <!-- Prénom -->
+    <mat-form-field appearance="outline">
+      <mat-label>Prénom</mat-label>
+      <input matInput formControlName="prenom" placeholder="Jean" required />
+      <mat-icon matPrefix>person</mat-icon>
+      <mat-error *ngIf="form.get('prenom')?.hasError('required')">
+        Le prénom est obligatoire
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" formControlName="email">
-  </mat-form-field>
+    <!-- Email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="jean.dupont@example.com" required />
+      <mat-icon matPrefix>email</mat-icon>
+      <mat-error *ngIf="form.get('email')?.hasError('required')">
+        L'email est obligatoire
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">
+        Format d'email invalide
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Téléphone</mat-label>
-    <input matInput formControlName="telephone">
-  </mat-form-field>
+    <!-- Téléphone -->
+    <mat-form-field appearance="outline">
+      <mat-label>Téléphone</mat-label>
+      <input matInput formControlName="telephone" placeholder="06 12 34 56 78" required />
+      <mat-icon matPrefix>phone</mat-icon>
+      <mat-error *ngIf="form.get('telephone')?.hasError('required')">
+        Le téléphone est obligatoire
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Rôle</mat-label>
-    <input matInput formControlName="role">
-  </mat-form-field>
+    <!-- Rôle -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Rôle</mat-label>
+      <mat-select formControlName="role" required>
+        <mat-option value="Agent">
+          <div class="role-option">
+            <mat-icon class="role-icon agent">person</mat-icon>
+            <span>Agent - Accès limité</span>
+          </div>
+        </mat-option>
+        <mat-option value="Admin">
+          <div class="role-option">
+            <mat-icon class="role-icon admin">admin_panel_settings</mat-icon>
+            <span>Admin - Accès complet</span>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-icon matSuffix>verified_user</mat-icon>
+      <mat-error *ngIf="form.get('role')?.hasError('required')">
+        Le rôle est obligatoire
+      </mat-error>
+    </mat-form-field>
+  </div>
 
+  <!-- Aperçu rôle -->
+  <div class="role-preview" [class.admin-preview]="form.get('role')?.value === 'Admin'" 
+       [class.agent-preview]="form.get('role')?.value === 'Agent'">
+    <mat-icon class="preview-icon">
+      {{ form.get('role')?.value === 'Admin' ? 'admin_panel_settings' : 'person' }}
+    </mat-icon>
+    <div class="preview-content">
+      <h4>{{ form.get('role')?.value || 'Sélectionnez un rôle' }}</h4>
+      <p>
+        {{ form.get('role')?.value === 'Admin' 
+           ? 'Accès complet à toutes les fonctionnalités du système.' 
+           : form.get('role')?.value === 'Agent' 
+           ? 'Accès limité aux fonctionnalités de gestion.' 
+           : 'Veuillez sélectionner un rôle.' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Actions -->
   <div class="actions">
-    <button mat-raised-button color="primary" type="submit">
-      {{ isEdit ? 'Enregistrer' : 'Ajouter' }}
+    <button mat-button class="btn-cancel rounded-btn" type="button" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Annuler
     </button>
-    <button mat-button type="button" (click)="goBack()">Annuler</button>
+    
+    <button mat-raised-button class="btn-submit rounded-btn" type="submit" [disabled]="form.invalid">
+      <mat-icon>{{ isEdit ? 'save' : 'add' }}</mat-icon>
+      {{ isEdit ? 'Enregistrer' : 'Ajouter l\'agent' }}
+    </button>
   </div>
 
 </form>

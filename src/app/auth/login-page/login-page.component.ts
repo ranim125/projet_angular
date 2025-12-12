@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { AuthService, UserRole } from '../services/auth-service'; // CORRIGÉ : import propre
+import { AuthService, UserRole } from '../services/auth-service';
 import { interval, Subscription } from 'rxjs';
 
 @Component({
@@ -33,12 +33,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   errorMessage = '';
   isBlocked = false;
   blockRemainingSeconds = 0;
+  attemptsCount = 0;
+  MAX_ATTEMPTS = 3;
 
   private blockTimer$!: Subscription;
-  private readonly BLOCK_DURATION = 60; // 60 secondes
-  private readonly MAX_ATTEMPTS = 3;
+  private readonly BLOCK_DURATION = 60;
 
-  // On déclare le FormGroup APRÈS l'injection du FormBuilder → plus d'erreur
   loginForm: FormGroup;
 
   constructor(
@@ -46,10 +46,16 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly router: Router
   ) {
-    // Initialisation ici, après que fb existe
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    // Écouter les changements d'email pour vérifier le statut de blocage
+    this.loginForm.get('email')?.valueChanges.subscribe(email => {
+      if (email && email.includes('@')) {
+        this.updateAccountStatus(email);
+      }
     });
   }
 
@@ -57,7 +63,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     if (this.authService.isLoggedIn()) {
       this.redirectByRole();
     }
-    this.checkIfBlocked();
   }
 
   ngOnDestroy(): void {
@@ -71,15 +76,16 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
 
     const { email, password } = this.loginForm.value;
+    const trimmedEmail = email!.trim();
 
     try {
-      const result = await this.authService.login(email!.trim(), password!);
+      const result = await this.authService.login(trimmedEmail, password!);
 
       if (result.success) {
-        this.resetAttempts();
+        this.resetLocalState();
         this.redirectByRole(result.role!);
       } else {
-        this.handleFailedAttempt(result.message);
+        this.handleLoginError(result.message, trimmedEmail);
       }
     } catch {
       this.errorMessage = 'Erreur réseau. Veuillez réessayer.';
@@ -89,73 +95,87 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   private redirectByRole(role?: UserRole): void {
-    // Après login, on redirige vers /admin ou /agent → qui redirigent vers /dashboard
     const target = role === 'admin' ? '/admin' : '/agent';
     this.router.navigate([target]);
   }
 
-  private handleFailedAttempt(message: string): void {
-    const attempts = this.getAttempts() + 1;
-    localStorage.setItem('loginAttempts', attempts.toString());
-
-    if (attempts >= this.MAX_ATTEMPTS) {
-      this.blockUser();
-      this.errorMessage = 'Trop de tentatives. Compte bloqué 60 secondes.';
+  private handleLoginError(message: string, email: string): void {
+    // Vérifier le statut de blocage après la tentative échouée
+    const blockStatus = this.authService.checkIfAccountBlocked(email);
+    
+    if (blockStatus.isBlocked && blockStatus.remainingSeconds) {
+      this.activateBlockTimer(blockStatus.remainingSeconds);
+      this.errorMessage = `Trop de tentatives. Compte bloqué pendant ${blockStatus.remainingSeconds} secondes.`;
     } else {
-      this.errorMessage = `${message} (${attempts}/${this.MAX_ATTEMPTS} tentatives)`;
+      // Mettre à jour le compteur d'essais
+      this.updateAttemptsCount(email);
+      this.errorMessage = message;
     }
   }
 
-  private blockUser(): void {
-    const blockUntil = Date.now() + this.BLOCK_DURATION * 1000;
-    localStorage.setItem('blockUntil', blockUntil.toString());
+  private updateAccountStatus(email: string): void {
+    const blockStatus = this.authService.checkIfAccountBlocked(email);
+    
+    if (blockStatus.isBlocked && blockStatus.remainingSeconds) {
+      this.isBlocked = true;
+      this.blockRemainingSeconds = blockStatus.remainingSeconds;
+      this.activateBlockTimer(blockStatus.remainingSeconds);
+    } else {
+      this.isBlocked = false;
+      this.blockRemainingSeconds = 0;
+      this.blockTimer$?.unsubscribe();
+    }
+    
+    // Mettre à jour le compteur d'essais
+    this.updateAttemptsCount(email);
+  }
 
+  private updateAttemptsCount(email: string): void {
+    const remaining = this.authService.getRemainingAttempts(email);
+    this.attemptsCount = Math.max(0, this.MAX_ATTEMPTS - remaining);
+  }
+
+  private activateBlockTimer(seconds: number): void {
     this.isBlocked = true;
-    this.blockRemainingSeconds = this.BLOCK_DURATION;
-
+    this.blockRemainingSeconds = seconds;
+    
+    // Arrêter le timer précédent si existant
+    this.blockTimer$?.unsubscribe();
+    
+    // Démarrer un nouveau timer
     this.blockTimer$ = interval(1000).subscribe(() => {
       this.blockRemainingSeconds--;
+      
+      // Vérifier si le blocage est terminé
+      const email = this.loginForm.get('email')?.value;
+      if (email) {
+        const blockStatus = this.authService.checkIfAccountBlocked(email);
+        if (!blockStatus.isBlocked) {
+          this.resetLocalState();
+        }
+      }
+      
       if (this.blockRemainingSeconds <= 0) {
-        this.unblockUser();
+        this.resetLocalState();
       }
     });
   }
 
-  private checkIfBlocked(): void {
-    const blockUntil = localStorage.getItem('blockUntil');
-    if (!blockUntil) return;
-
-    const remaining = Math.ceil((Number(blockUntil) - Date.now()) / 1000);
-    if (remaining > 0) {
-      this.isBlocked = true;
-      this.blockRemainingSeconds = remaining;
-
-      this.blockTimer$ = interval(1000).subscribe(() => {
-        this.blockRemainingSeconds--;
-        if (this.blockRemainingSeconds <= 0) {
-          this.unblockUser();
-        }
-      });
-    } else {
-      this.unblockUser();
+  private resetLocalState(): void {
+    this.isBlocked = false;
+    this.blockRemainingSeconds = 0;
+    this.errorMessage = '';
+    this.blockTimer$?.unsubscribe();
+    
+    // Réinitialiser le compteur pour l'email actuel
+    const email = this.loginForm.get('email')?.value;
+    if (email) {
+      this.updateAttemptsCount(email);
     }
   }
 
-  private unblockUser(): void {
-    localStorage.removeItem('blockUntil');
-    localStorage.removeItem('loginAttempts');
-    this.isBlocked = false;
-    this.blockRemainingSeconds = 0;
-    this.blockTimer$?.unsubscribe();
-  }
-
-  private getAttempts(): number {
-    return Number(localStorage.getItem('loginAttempts') || '0');
-  }
-
-  private resetAttempts(): void {
-    localStorage.removeItem('loginAttempts');
-    localStorage.removeItem('blockUntil');
-    this.isBlocked = false;
+  // Méthode publique pour récupérer les tentatives (utilisée dans le template)
+  getAttempts(): number {
+    return this.attemptsCount;
   }
 }

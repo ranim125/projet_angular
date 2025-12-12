@@ -1,17 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+// Material imports
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 import { ProfileService } from '../profile-service/profile.service';
 import { CurrentUser } from '../../shared/role-utils';
 import { AuthService } from '../../auth/services/auth-service';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; // AJOUT : injection directe
-import { firstValueFrom } from 'rxjs'; // AJOUT : import correct
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+  ],
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css']
 })
@@ -21,6 +39,10 @@ export class ProfilePageComponent implements OnInit {
   passwordForm: FormGroup;
   isEditMode = false;
   isPasswordMode = false;
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideConfirmPassword = true;
+  
   successMessage = '';
   passwordError = '';
   passwordSuccess = '';
@@ -30,7 +52,7 @@ export class ProfilePageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private http: HttpClient // AJOUT : injection directe de HttpClient
+    private http: HttpClient
   ) {
     this.profileForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(2)]],
@@ -40,18 +62,16 @@ export class ProfilePageComponent implements OnInit {
       role: [{ value: '', disabled: true }]
     });
 
-    // CORRIGÉ : validateurs passés correctement (non déprécié)
     this.passwordForm = this.fb.group(
       {
         currentPassword: ['', [Validators.required, Validators.minLength(6)]],
         newPassword: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]]
       },
-      { validators: this.passwordMatchValidator } // ← Bonne syntaxe
+      { validators: this.passwordMatchValidator }
     );
   }
 
-  // Validateur personnalisé pour confirmation mot de passe
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const newPass = control.get('newPassword')?.value;
     const confirmPass = control.get('confirmPassword')?.value;
@@ -77,6 +97,7 @@ export class ProfilePageComponent implements OnInit {
 
   enableEdit(): void {
     this.isEditMode = true;
+    this.isPasswordMode = false;
     this.successMessage = '';
   }
 
@@ -106,6 +127,7 @@ export class ProfilePageComponent implements OnInit {
 
   enablePasswordChange(): void {
     this.isPasswordMode = true;
+    this.isEditMode = false;
     this.passwordError = '';
     this.passwordSuccess = '';
     this.passwordForm.reset();
@@ -127,7 +149,6 @@ export class ProfilePageComponent implements OnInit {
     const { currentPassword, newPassword } = this.passwordForm.value;
 
     try {
-      // CORRIGÉ : utilisation directe de http (injecté) + firstValueFrom importé
       const users = await firstValueFrom(this.http.get<any[]>('/assets/data/agents.json'));
       const currentUserEmail = this.user?.email;
       const foundUser = users.find(u => u.email === currentUserEmail);
@@ -137,7 +158,7 @@ export class ProfilePageComponent implements OnInit {
         return;
       }
 
-      // Simulation de succès (en vrai projet : appel API pour update)
+      // Simulation de succès
       this.passwordSuccess = 'Mot de passe changé avec succès !';
       this.passwordForm.reset();
       setTimeout(() => {
@@ -147,6 +168,34 @@ export class ProfilePageComponent implements OnInit {
 
     } catch (error) {
       this.passwordError = 'Erreur lors du changement de mot de passe.';
+    }
+  }
+
+  // Méthodes pour la force du mot de passe
+  getPasswordStrength(): string {
+    const password = this.passwordForm.get('newPassword')?.value;
+    if (!password) return 'none';
+    
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    const score = [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChars].filter(Boolean).length;
+    
+    if (password.length < 8) return 'weak';
+    if (score >= 3) return 'strong';
+    if (score >= 2) return 'medium';
+    return 'weak';
+  }
+
+  getPasswordStrengthText(): string {
+    const strength = this.getPasswordStrength();
+    switch(strength) {
+      case 'weak': return 'Faible - Ajoutez des majuscules, chiffres ou caractères spéciaux';
+      case 'medium': return 'Moyen - Peut être amélioré';
+      case 'strong': return 'Fort - Très sécurisé';
+      default: return 'Entrez un mot de passe';
     }
   }
 }

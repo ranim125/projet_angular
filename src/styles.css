@@ -1,4 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* styles.css - Ajoutez ceci au début du fichier */
+:root {
+  --tropical-mint: #29F0B5;
+  --charcoal: #515659;
+  --dust-grey: #D0CFCC;
+  --platinum: #F1F1F1;
+  --deep-space-blue: #162C44;
+  --chartreuse: #BAEF17;
+  --light-coral: #EE8781;
+  --wheat: #FBE6BF;
+  --tuscan-sun: #F3C150;
+}

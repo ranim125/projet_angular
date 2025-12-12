@@ -1,4 +1,3 @@
-// src/app/dashboard/graphs/graphs.component.ts
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Chart from 'chart.js/auto';
@@ -18,41 +17,108 @@ export class GraphsComponent implements AfterViewInit {
   @ViewChild('pieSuppliersCanvas') pieSuppliersCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('pieClientsCanvas') pieClientsCanvas!: ElementRef<HTMLCanvasElement>;
 
+  // Palette de couleurs
+  private colors = {
+    deepSpaceBlue: '#162C44',
+    tropicalMint: '#29F0B5',
+    chartreuse: '#BAEF17',
+    lightCoral: '#EE8781',
+    tuscanSun: '#F3C150',
+    charcoal: '#515659',
+    platinum: '#F1F1F1'
+  };
+
   ngAfterViewInit(): void {
-    this.createCharts();
+    // Petit délai pour assurer que les canvas sont prêts
+    setTimeout(() => {
+      this.createCharts();
+    }, 200);
   }
 
   private createCharts() {
+    // Créer des données d'exemple si localStorage est vide
+    this.ensureSampleData();
+    
     const products = JSON.parse(localStorage.getItem('products') || '[]');
     const categories = JSON.parse(localStorage.getItem('categories') || '[]');
     const suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
     const clients = JSON.parse(localStorage.getItem('clients') || '[]');
 
-    // 1. PRODUITS EN STOCK PAR CATÉGORIE (barres)
-    const stockCountByCat = new Map<number, number>();
-    categories.forEach((cat: any) => stockCountByCat.set(cat.id, 0));
+    // 1. Graphique à barres - Produits par catégorie
+    this.createBarChart(products, categories);
+    
+    // 2. Graphique doughnut - Rupture de stock
+    this.createDoughnutChart(products, categories);
+    
+    // 3. Graphique camembert - Fournisseurs par région
+    this.createPieChart(suppliers, this.pieSuppliersCanvas, 'Fournisseurs par région');
+    
+    // 4. Graphique camembert - Clients par région
+    this.createPieChart(clients, this.pieClientsCanvas, 'Clients par région');
+  }
 
-    products.forEach((p: any) => {
-      if (p.inStock === true) {  // seulement ceux en stock
-        const catId = Number(p.categoryId);
-        if (!isNaN(catId) && stockCountByCat.has(catId)) {
-          stockCountByCat.set(catId, (stockCountByCat.get(catId) || 0) + 1);
-        }
+  private ensureSampleData() {
+    if (!localStorage.getItem('products')) {
+      const sampleData = {
+        products: [
+          { id: 1, name: 'Produit A', categoryId: 1, inStock: true },
+          { id: 2, name: 'Produit B', categoryId: 1, inStock: false },
+          { id: 3, name: 'Produit C', categoryId: 2, inStock: true },
+          { id: 4, name: 'Produit D', categoryId: 2, inStock: true },
+          { id: 5, name: 'Produit E', categoryId: 3, inStock: false }
+        ],
+        categories: [
+          { id: 1, name: 'Électronique' },
+          { id: 2, name: 'Meubles' },
+          { id: 3, name: 'Vêtements' }
+        ],
+        suppliers: [
+          { id: 1, name: 'Fournisseur 1', region: 'Casablanca' },
+          { id: 2, name: 'Fournisseur 2', region: 'Rabat' },
+          { id: 3, name: 'Fournisseur 3', region: 'Casablanca' },
+          { id: 4, name: 'Fournisseur 4', region: 'Marrakech' }
+        ],
+        clients: [
+          { id: 1, name: 'Client 1', region: 'Casablanca' },
+          { id: 2, name: 'Client 2', region: 'Rabat' },
+          { id: 3, name: 'Client 3', region: 'Casablanca' },
+          { id: 4, name: 'Client 4', region: 'Tanger' },
+          { id: 5, name: 'Client 5', region: 'Rabat' }
+        ]
+      };
+
+      localStorage.setItem('products', JSON.stringify(sampleData.products));
+      localStorage.setItem('categories', JSON.stringify(sampleData.categories));
+      localStorage.setItem('suppliers', JSON.stringify(sampleData.suppliers));
+      localStorage.setItem('clients', JSON.stringify(sampleData.clients));
+    }
+  }
+
+  private createBarChart(products: any[], categories: any[]) {
+    if (!this.barCanvas?.nativeElement) return;
+
+    const categoryCounts = new Map();
+    categories.forEach(cat => categoryCounts.set(cat.id, 0));
+    
+    products.forEach(product => {
+      if (product.inStock) {
+        const count = categoryCounts.get(product.categoryId) || 0;
+        categoryCounts.set(product.categoryId, count + 1);
       }
     });
 
-    const barLabels = categories.map((c: any) => c.name || 'Inconnue');
-    const barData = categories.map((c: any) => stockCountByCat.get(c.id) || 0);
+    const labels = categories.map(c => c.name);
+    const data = categories.map(c => categoryCounts.get(c.id) || 0);
 
     new Chart(this.barCanvas.nativeElement, {
       type: 'bar',
       data: {
-        labels: barLabels,
+        labels: labels,
         datasets: [{
           label: 'Produits en stock',
-          data: barData,
-          backgroundColor: '#4caf50',
-          borderRadius: 10
+          data: data,
+          backgroundColor: this.colors.tropicalMint,
+          borderRadius: 8
         }]
       },
       options: {
@@ -61,70 +127,92 @@ export class GraphsComponent implements AfterViewInit {
         plugins: { legend: { display: false } }
       }
     });
+  }
 
-    // 2. PRODUITS EN RUPTURE PAR CATÉGORIE (doughnut)
-    const ruptureCountByCat = new Map<number, number>();
-    categories.forEach((cat: any) => ruptureCountByCat.set(cat.id, 0));
+  private createDoughnutChart(products: any[], categories: any[]) {
+    if (!this.doughnutCanvas?.nativeElement) return;
 
-    products.forEach((p: any) => {
-      if (p.inStock === false) {
-        const catId = Number(p.categoryId);
-        if (!isNaN(catId) && ruptureCountByCat.has(catId)) {
-          ruptureCountByCat.set(catId, (ruptureCountByCat.get(catId) || 0) + 1);
-        }
+    const ruptureCounts = new Map();
+    categories.forEach(cat => ruptureCounts.set(cat.id, 0));
+    
+    products.forEach(product => {
+      if (!product.inStock) {
+        const count = ruptureCounts.get(product.categoryId) || 0;
+        ruptureCounts.set(product.categoryId, count + 1);
       }
     });
 
-    const doughnutLabels = categories
-      .filter((c: any) => (ruptureCountByCat.get(c.id) || 0) > 0)
-      .map((c: any) => c.name);
+    const labels = categories
+      .filter(c => (ruptureCounts.get(c.id) || 0) > 0)
+      .map(c => c.name);
+    
+    const data = categories
+      .filter(c => (ruptureCounts.get(c.id) || 0) > 0)
+      .map(c => ruptureCounts.get(c.id) || 0);
 
-    const doughnutData = categories
-      .filter((c: any) => (ruptureCountByCat.get(c.id) || 0) > 0)
-      .map((c: any) => ruptureCountByCat.get(c.id) || 0);
+    if (labels.length === 0) {
+      labels.push('Aucune rupture');
+      data.push(1);
+    }
 
     new Chart(this.doughnutCanvas.nativeElement, {
       type: 'doughnut',
       data: {
-        labels: doughnutLabels.length ? doughnutLabels : ['Aucune rupture'],
+        labels: labels,
         datasets: [{
-          data: doughnutData.length ? doughnutData : [1],
-          backgroundColor: doughnutData.length ? ['#f44336', '#ff5722', '#ff9800'] : ['#e0e0e0']
+          data: data,
+          backgroundColor: [
+            this.colors.lightCoral,
+            this.colors.tuscanSun,
+            this.colors.chartreuse,
+            this.colors.deepSpaceBlue
+          ]
         }]
       },
-      options: { responsive: true, maintainAspectRatio: false }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  }
+
+  private createPieChart(items: any[], canvasRef: ElementRef<HTMLCanvasElement>, title: string) {
+    if (!canvasRef?.nativeElement || items.length === 0) return;
+
+    const regionCounts = new Map();
+    items.forEach(item => {
+      const region = item.region || 'Non spécifié';
+      regionCounts.set(region, (regionCounts.get(region) || 0) + 1);
     });
 
-    // 3. FOURNISSEURS PAR RÉGION
-    const supplierRegionMap = new Map<string, number>();
-    suppliers.forEach((s: any) => {
-      const region = s.region || 'Non défini';
-      supplierRegionMap.set(region, (supplierRegionMap.get(region) || 0) + 1);
-    });
+    const labels = Array.from(regionCounts.keys());
+    const data = Array.from(regionCounts.values());
 
-    new Chart(this.pieSuppliersCanvas.nativeElement, {
+    new Chart(canvasRef.nativeElement, {
       type: 'pie',
       data: {
-        labels: Array.from(supplierRegionMap.keys()),
-        datasets: [{ data: Array.from(supplierRegionMap.values()), backgroundColor: ['#1976d2', '#42a5f5', '#764ba2', '#f093fb', '#9c27b0'] }]
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: [
+            this.colors.deepSpaceBlue,
+            this.colors.tropicalMint,
+            this.colors.chartreuse,
+            this.colors.tuscanSun,
+            this.colors.lightCoral
+          ]
+        }]
       },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // 4. CLIENTS PAR RÉGION (NOUVEAU)
-    const clientRegionMap = new Map<string, number>();
-    clients.forEach((c: any) => {
-      const region = c.region || c.adresse?.split(',')[1]?.trim() || 'Non défini';
-      clientRegionMap.set(region, (clientRegionMap.get(region) || 0) + 1);
-    });
-
-    new Chart(this.pieClientsCanvas.nativeElement, {
-      type: 'pie',
-      data: {
-        labels: Array.from(clientRegionMap.keys()),
-        datasets: [{ data: Array.from(clientRegionMap.values()), backgroundColor: ['#ff9800', '#ff5722', '#e91e63', '#9c27b0', '#673ab7'] }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: title
+          }
+        }
+      }
     });
   }
 }

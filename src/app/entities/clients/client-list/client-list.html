@@ -1,55 +1,147 @@
+<div class="header">
 
-
-<div class="header-controls">
-  <button *ngIf="isAdmin" mat-raised-button color="primary" (click)="goToAdd()">
-    Ajouter un client
+  <button *ngIf="isAdmin" mat-raised-button class="btn-primary rounded-full" (click)="goToAdd()">
+    <mat-icon>person_add</mat-icon> Ajouter un client
   </button>
 
-  <div class="filters">
-    <mat-form-field appearance="outline">
-      <mat-label>Recherche par nom</mat-label>
-      <input matInput [(ngModel)]="searchNom" (input)="resetPageAndFilter()" placeholder="Dupont, Ahmed...">
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom ou prénom..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Filtre par adresse</mat-label>
-      <input matInput [(ngModel)]="filterAdresse" (input)="resetPageAndFilter()" placeholder="Casablanca...">
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Filtrer par adresse</mat-label>
+    <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, rue..." />
+    <mat-icon matSuffix>location_on</mat-icon>
+  </mat-form-field>
+
+  <div class="sort-buttons">
+    <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
+      <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
+    </button>
   </div>
+
 </div>
 
-<table mat-table [dataSource]="filteredClients" class="mat-elevation-z4">
+<table mat-table [dataSource]="filteredAndPaged" class="mat-elevation-z2 rounded-table">
+
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>ID</th>
-    <td mat-cell *matCellDef="let c">{{c.id}}</td>
+    <th mat-header-cell *matHeaderCellDef> ID </th>
+    <td mat-cell *matCellDef="let c"> 
+      <span class="id-badge rounded-full">#{{c.id}}</span>
+    </td>
   </ng-container>
-  <ng-container matColumnDef="nom">
-    <th mat-header-cell *matHeaderCellDef>Nom</th>
-    <td mat-cell *matCellDef="let c">{{c.nom}}</td>
-  </ng-container>
-  <ng-container matColumnDef="prenom">
-    <th mat-header-cell *matHeaderCellDef>Prénom</th>
-    <td mat-cell *matCellDef="let c">{{c.prenom}}</td>
-  </ng-container>
-  <ng-container matColumnDef="telephone">
-    <th mat-header-cell *matHeaderCellDef>Téléphone</th>
-    <td mat-cell *matCellDef="let c">{{c.telephone}}</td>
-  </ng-container>
-  <ng-container matColumnDef="adresse">
-    <th mat-header-cell *matHeaderCellDef>Adresse</th>
-    <td mat-cell *matCellDef="let c">{{c.adresse}}</td>
-  </ng-container>
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef>Actions</th>
+
+  <ng-container matColumnDef="fullName">
+    <th mat-header-cell *matHeaderCellDef> Client </th>
     <td mat-cell *matCellDef="let c">
-      <button mat-icon-button color="primary" (click)="edit(c.id)" *ngIf="isAdmin"><mat-icon>edit</mat-icon></button>
-      <button mat-icon-button color="warn" (click)="delete(c.id)" *ngIf="isAdmin"><mat-icon>delete</mat-icon></button>
+      <div class="client-info">
+        <div class="client-avatar rounded-full">{{c.prenom.charAt(0)}}{{c.nom.charAt(0)}}</div>
+        <div class="client-details">
+          <div class="client-name">{{c.prenom}} {{c.nom}}</div>
+          <div class="client-id">ID: {{c.id}}</div>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="telephone">
+    <th mat-header-cell *matHeaderCellDef> Téléphone </th>
+    <td mat-cell *matCellDef="let c">
+      <div class="phone-container">
+        <mat-icon class="phone-icon">phone</mat-icon>
+        <span class="phone-number">{{c.telephone}}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="adresse">
+    <th mat-header-cell *matHeaderCellDef> Adresse </th>
+    <td mat-cell *matCellDef="let c">
+      <div class="address-container">
+        <mat-icon class="address-icon">location_on</mat-icon>
+        <span class="address-text">{{c.adresse}}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
+    <td mat-cell *matCellDef="let c" class="actions-cell">
+      <button mat-icon-button class="btn-details rounded-full" (click)="viewDetails(c)" matTooltip="Voir détails">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button *ngIf="isAdmin" mat-icon-button class="btn-edit rounded-full" (click)="edit(c.id)" matTooltip="Modifier">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button *ngIf="isAdmin" mat-icon-button class="btn-delete rounded-full" (click)="delete(c.id)" matTooltip="Supprimer">
+        <mat-icon>delete</mat-icon>
+      </button>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
 </table>
 
-<mat-paginator [length]="total" [pageSize]="pageSize" [pageSizeOptions]="[5,10,20,50]"
-               (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
+<mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 20]"
+  (page)="onPageChange($event)"
+  class="rounded-paginator">
+</mat-paginator>
+
+<!-- Modal détails client -->
+<div *ngIf="selectedClient" class="details-backdrop">
+  <mat-card class="details-card">
+
+    <div class="details-header">
+      <div class="client-avatar-large rounded-full">{{selectedClient.prenom.charAt(0)}}{{selectedClient.nom.charAt(0)}}</div>
+      <mat-card-title>{{selectedClient.prenom}} {{selectedClient.nom}}</mat-card-title>
+    </div>
+
+    <mat-card-content>
+      <div class="detail-item">
+        <mat-icon>badge</mat-icon>
+        <div>
+          <span class="detail-label">ID Client :</span>
+          <span class="detail-value id-badge rounded-full">#{{selectedClient.id}}</span>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <mat-icon>person</mat-icon>
+        <div>
+          <span class="detail-label">Nom complet :</span>
+          <span class="detail-value">{{selectedClient.nom}} {{selectedClient.prenom}}</span>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <mat-icon>phone</mat-icon>
+        <div>
+          <span class="detail-label">Téléphone :</span>
+          <span class="detail-value phone-highlight">{{selectedClient.telephone}}</span>
+        </div>
+      </div>
+      
+      <div class="detail-item full-width">
+        <mat-icon>location_on</mat-icon>
+        <div>
+          <span class="detail-label">Adresse :</span>
+          <p class="detail-description">{{selectedClient.adresse}}</p>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-button class="btn-close" (click)="closeDetails()">
+        <mat-icon>close</mat-icon> Fermer
+      </button>
+    </mat-card-actions>
+
+  </mat-card>
+</div>

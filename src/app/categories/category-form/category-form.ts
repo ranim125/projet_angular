@@ -1,4 +1,3 @@
-// src/app/categories/category-form/category-form.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon'; // AJOUTER CETTE LIGNE
 import { CategoryService, Category } from '../category-service/category-service';
 
 @Component({
@@ -16,7 +16,8 @@ import { CategoryService, Category } from '../category-service/category-service'
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule // AJOUTER CETTE LIGNE
   ],
   templateUrl: './category-form.html',
   styleUrls: ['./category-form.css']
@@ -58,9 +59,10 @@ export class CategoryForm implements OnInit {
       this.categoryService.add(name);
     }
 
-this.goBack();  }
+    this.router.navigate(['/categories']); // MODIFIÉ
+  }
 
   goBack(): void {
-  window.history.back();
-}
+    this.router.navigate(['/categories']); // MODIFIÉ
+  }
 }

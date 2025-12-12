@@ -1,1 +1,162 @@
-<p>product-details works!</p>
+<div class="product-details-container" *ngIf="!loading; else loadingTemplate">
+  
+  <div *ngIf="error; else contentTemplate" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h2>Produit non trouvé</h2>
+    <p>Le produit que vous recherchez n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button class="btn-back" (click)="onBack()">
+      <mat-icon>arrow_back</mat-icon> Retour à la liste
+    </button>
+  </div>
+
+  <ng-template #contentTemplate>
+    <div class="product-header">
+      <div class="header-left">
+        <h1 class="product-title">{{ product?.name }}</h1>
+        <div class="product-meta">
+          <span class="product-id">
+            <mat-icon>tag</mat-icon>
+            ID: {{ product?.id }}
+          </span>
+          <span class="product-date">
+            <mat-icon>calendar_today</mat-icon>
+            Ajouté le: {{ formatDate() }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <span class="stock-badge" [class.in-stock]="product?.inStock" [class.out-stock]="!product?.inStock">
+          <mat-icon>{{ product?.inStock ? 'check_circle' : 'cancel' }}</mat-icon>
+          {{ product?.inStock ? 'En stock' : 'Rupture' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="product-content">
+      
+      <div class="product-image-section">
+        <div class="product-image-placeholder">
+          <mat-icon>inventory</mat-icon>
+          <span>{{ product?.name }}</span>
+        </div>
+        <div class="image-actions">
+          <button mat-button class="btn-image-action" (click)="onPrint()">
+            <mat-icon>add_a_photo</mat-icon> Changer
+          </button>
+          <button mat-button class="btn-image-action" (click)="onPrint()">
+            <mat-icon>zoom_in</mat-icon> Agrandir
+          </button>
+        </div>
+      </div>
+
+      <div class="product-info-section">
+        
+        <div class="info-card price-card">
+          <div class="info-icon">
+            <mat-icon>attach_money</mat-icon>
+          </div>
+          <div class="info-content">
+            <span class="info-label">Prix unitaire</span>
+            <span class="info-value price">{{ product?.price | number:'1.2-2' }} DT</span>
+          </div>
+        </div>
+
+        <div class="info-card category-card">
+          <div class="info-icon">
+            <mat-icon>category</mat-icon>
+          </div>
+          <div class="info-content">
+            <span class="info-label">Catégorie</span>
+            <span class="info-value">{{ getCategoryName(product?.categoryId || 0) }}</span>
+          </div>
+        </div>
+
+        <div class="info-card stock-card">
+          <div class="info-icon">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="info-content">
+            <span class="info-label">Statut stock</span>
+            <span class="info-value stock-status" [class.in-stock]="product?.inStock" [class.out-stock]="!product?.inStock">
+              {{ product?.inStock ? 'Disponible' : 'Indisponible' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="info-card supplier-card">
+          <div class="info-icon">
+            <mat-icon>local_shipping</mat-icon>
+          </div>
+          <div class="info-content">
+            <span class="info-label">Fournisseur</span>
+            <span class="info-value">{{ getSupplierName() }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="description-section">
+        <div class="section-header">
+          <mat-icon class="section-icon">description</mat-icon>
+          <h3>Description du produit</h3>
+        </div>
+        <div class="description-content">
+          <p>{{ product?.description || 'Aucune description disponible pour ce produit.' }}</p>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <div class="section-header">
+          <mat-icon class="section-icon">analytics</mat-icon>
+          <h3>Statistiques</h3>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">{{ getRandomStats().orders }}</div>
+            <div class="stat-label">Commandes ce mois</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ getRandomStats().sales }}</div>
+            <div class="stat-label">Ventes totales</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ getRandomStats().returns }}</div>
+            <div class="stat-label">Retours</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ getRandomStats().satisfaction }}%</div>
+            <div class="stat-label">Satisfaction</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="product-actions">
+      <button mat-raised-button class="btn-edit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon> Modifier le produit
+      </button>
+      <button mat-button class="btn-print" (click)="onPrint()">
+        <mat-icon>print</mat-icon> Imprimer
+      </button>
+      <button mat-button class="btn-share" (click)="onShare()">
+        <mat-icon>share</mat-icon> Partager
+      </button>
+      <button mat-button class="btn-delete" (click)="onDelete()">
+        <mat-icon>delete</mat-icon> Supprimer
+      </button>
+      <button mat-button class="btn-back" (click)="onBack()">
+        <mat-icon>arrow_back</mat-icon> Retour à la liste
+      </button>
+    </div>
+  </ng-template>
+
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <mat-spinner diameter="60" color="primary"></mat-spinner>
+    <p>Chargement du produit...</p>
+  </div>
+</ng-template>

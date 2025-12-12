@@ -1,0 +1,267 @@
+/* Variables de palette */
+:root {
+  --deep-space-blue: #162C44;
+  --tropical-mint: #29F0B5;
+  --charcoal: #515659;
+  --platinum: #F1F1F1;
+  --chartreuse: #BAEF17;
+  --light-coral: #EE8781;
+  --tuscan-sun: #F3C150;
+  --dust-grey: #D0CFCC;
+  --mint-light: rgba(41, 240, 181, 0.1);
+  --blue-light: rgba(22, 44, 68, 0.1);
+  --coral-light: rgba(238, 135, 129, 0.1);
+}
+
+/* Conteneur principal */
+:host {
+  display: block;
+  padding: 24px;
+  background: var(--platinum);
+  min-height: calc(100vh - 110px);
+}
+/* Titre avec icône */
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.form-icon {
+  font-size: 32px !important;
+  height: 32px !important;
+  width: 32px !important;
+  color: var(--tropical-mint);
+}
+
+/* Icônes dans les champs */
+::ng-deep .mat-icon {
+  color: var(--tropical-mint) !important;
+}
+
+/* Boutons arrondis comme produits */
+.btn-submit.rounded-btn {
+  background: var(--deep-space-blue) !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  height: 48px;
+  padding: 0 32px;
+  border-radius: 9999px !important;
+  transition: all 0.3s ease;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-submit.rounded-btn:hover:not([disabled]) {
+  background: var(--tropical-mint) !important;
+  color: var(--deep-space-blue) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(41, 240, 181, 0.3);
+}
+
+.btn-submit.rounded-btn[disabled] {
+  background: var(--dust-grey) !important;
+  color: var(--charcoal) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel.rounded-btn {
+  background: transparent !important;
+  color: var(--charcoal) !important;
+  border: 1px solid var(--dust-grey) !important;
+  font-weight: 500;
+  font-size: 15px;
+  height: 48px;
+  padding: 0 32px;
+  border-radius: 9999px !important;
+  transition: all 0.3s ease;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-cancel.rounded-btn:hover {
+  background: rgba(81, 86, 89, 0.05) !important;
+  border-color: var(--charcoal) !important;
+  transform: translateY(-2px);
+}
+
+/* Titre */
+h2 {
+  color: var(--deep-space-blue);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 32px 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--tropical-mint);
+  display: inline-block;
+}
+
+/* Formulaire */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Champs de formulaire */
+.full-width {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+/* Style des champs Material */
+::ng-deep .mat-mdc-text-field-wrapper {
+  border-radius: 12px !important;
+  background: white !important;
+}
+
+::ng-deep .mat-mdc-form-field-outline {
+  border-color: rgba(81, 86, 89, 0.2) !important;
+  border-radius: 12px !important;
+  border-width: 1.5px !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
+  border-color: var(--tropical-mint) !important;
+  border-width: 2px !important;
+}
+
+/* Labels */
+::ng-deep .mat-mdc-floating-label {
+  color: var(--charcoal) !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .mat-mdc-floating-label.mdc-floating-label--float-above {
+  color: var(--deep-space-blue) !important;
+  font-weight: 600 !important;
+}
+
+/* Inputs */
+::ng-deep .mat-mdc-input-element {
+  color: var(--deep-space-blue) !important;
+  font-size: 15px !important;
+}
+
+/* Messages d'erreur */
+::ng-deep .mat-mdc-form-field-error {
+  color: var(--light-coral) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-form-field-invalid .mat-mdc-form-field-outline {
+  border-color: var(--light-coral) !important;
+}
+
+/* Section des actions */
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Bouton principal */
+button[mat-raised-button][color="primary"] {
+  background: var(--deep-space-blue) !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  height: 48px;
+  padding: 0 32px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+button[mat-raised-button][color="primary"]:hover:not([disabled]) {
+  background: var(--tropical-mint) !important;
+  color: var(--deep-space-blue) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(41, 240, 181, 0.3);
+}
+
+button[mat-raised-button][color="primary"][disabled] {
+  background: var(--dust-grey) !important;
+  color: var(--charcoal) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Bouton Annuler */
+button[mat-button] {
+  background: transparent !important;
+  color: var(--charcoal) !important;
+  border: 1px solid var(--dust-grey) !important;
+  font-weight: 500;
+  font-size: 15px;
+  height: 48px;
+  padding: 0 32px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+button[mat-button]:hover {
+  background: rgba(81, 86, 89, 0.05) !important;
+  border-color: var(--charcoal) !important;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+  }
+  
+  .form-container {
+    padding: 24px 20px;
+    margin: 0;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  button[mat-raised-button][color="primary"],
+  button[mat-button] {
+    width: 100%;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 20px 16px;
+  }
+  
+  h2 {
+    font-size: 20px;
+  }
+  
+  .full-width {
+    margin-bottom: 20px;
+  }
+}
