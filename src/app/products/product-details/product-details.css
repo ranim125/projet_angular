@@ -11,6 +11,8 @@
   --mint-light: rgba(41, 240, 181, 0.1);
   --blue-light: rgba(22, 44, 68, 0.1);
   --coral-light: rgba(238, 135, 129, 0.1);
+  --product-color: #9C27B0;
+  --product-light: rgba(156, 39, 176, 0.1);
 }
 
 /* Conteneur principal */
@@ -91,7 +93,7 @@
   width: 16px;
 }
 
-/* Badge de stock */
+/* Badge de stock - STYLE UNIFIÉ */
 .stock-badge {
   padding: 12px 24px;
   border-radius: 14px;
@@ -246,7 +248,7 @@
 }
 
 .category-card .info-icon {
-  background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%);
+  background: linear-gradient(135deg, var(--product-color) 0%, #ba68c8 100%);
 }
 
 .stock-card .info-icon {
@@ -425,7 +427,8 @@
 .btn-edit,
 .btn-print,
 .btn-share,
-.btn-back {
+.btn-back,
+.btn-delete {
   border-radius: 14px !important;
   height: 52px;
   font-weight: 600;
@@ -479,6 +482,19 @@
   box-shadow: 0 6px 12px rgba(41, 240, 181, 0.2);
 }
 
+.btn-delete {
+  background: var(--coral-light) !important;
+  color: var(--light-coral) !important;
+  border: 2px solid var(--light-coral) !important;
+}
+
+.btn-delete:hover {
+  background: var(--light-coral) !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(238, 135, 129, 0.3);
+}
+
 .btn-back {
   background: transparent !important;
   color: var(--charcoal) !important;
@@ -490,90 +506,6 @@
   border-color: var(--charcoal) !important;
   transform: translateY(-2px);
 }
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .product-content {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  
-  .product-info-section {
-    grid-column: 1;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  :host {
-    padding: 16px;
-  }
-  
-  .product-details-container {
-    padding: 24px;
-  }
-  
-  .product-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 20px;
-  }
-  
-  .product-title {
-    font-size: 26px;
-  }
-  
-  .product-meta {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .btn-edit,
-  .btn-print,
-  .btn-share,
-  .btn-back {
-    min-width: 100%;
-    flex: auto;
-  }
-  
-  .product-actions {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .product-details-container {
-    padding: 20px 16px;
-  }
-  
-  .product-title {
-    font-size: 22px;
-  }
-  
-  .info-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-    padding: 20px;
-  }
-  
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .stat-value {
-    font-size: 28px;
-  }
-  
-  .description-section,
-  .stats-section {
-    padding: 24px 20px;
-  }
-}
-/* Ajoutez ces styles à la fin du fichier product-details.css */
 
 /* Conteneur de chargement */
 .loading-container {
@@ -620,18 +552,8 @@
   font-size: 16px;
 }
 
-/* Bouton Supprimer */
-.btn-delete {
-  background: var(--coral-light) !important;
-  color: var(--light-coral) !important;
-  border: 2px solid var(--light-coral) !important;
-}
-
-.btn-delete:hover {
-  background: var(--light-coral) !important;
-  color: white !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(238, 135, 129, 0.3);
+.error-container .btn-back {
+  min-width: 200px;
 }
 
 /* Snackbar personnalisé */
@@ -674,5 +596,89 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .product-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  
+  .product-info-section {
+    grid-column: 1;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+  }
+  
+  .product-details-container {
+    padding: 24px;
+  }
+  
+  .product-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  
+  .product-title {
+    font-size: 26px;
+  }
+  
+  .product-meta {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .btn-edit,
+  .btn-print,
+  .btn-share,
+  .btn-delete,
+  .btn-back {
+    min-width: 100%;
+    flex: auto;
+  }
+  
+  .product-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-details-container {
+    padding: 20px 16px;
+  }
+  
+  .product-title {
+    font-size: 22px;
+  }
+  
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-value {
+    font-size: 28px;
+  }
+  
+  .description-section,
+  .stats-section {
+    padding: 24px 20px;
   }
 }

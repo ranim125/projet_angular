@@ -35,7 +35,8 @@ import { isAdmin } from '../../../shared/role-utils';
 })
 export class ClientList implements OnInit {
 
-  displayedColumns: string[] = ['id', 'fullName', 'telephone', 'adresse', 'actions'];
+  // MODIFIÉ : Colonne email supprimée
+  displayedColumns: string[] = ['client', 'telephone', 'adresse', 'actions'];
   allClients: Client[] = [];
   filteredClients: Client[] = [];
   filteredAndPaged: Client[] = [];

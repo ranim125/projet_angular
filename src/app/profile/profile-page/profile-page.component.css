@@ -197,7 +197,7 @@
   width: 20px !important;
 }
 
-/* Boutons d'action */
+/* MODIFIÉ : Boutons d'action - CORRECTION DU BOUTON "CHANGER MOT DE PASSE" */
 .profile-actions {
   display: flex;
   gap: 20px;
@@ -207,8 +207,6 @@
 
 .btn-edit-profile.rounded-btn,
 .btn-change-password.rounded-btn {
-  background: var(--deep-space-blue) !important;
-  color: white !important;
   font-weight: 600;
   font-size: 15px;
   letter-spacing: 0.5px;
@@ -220,24 +218,41 @@
   align-items: center;
   gap: 10px;
   min-width: 220px;
+  border: 2px solid transparent !important;
   box-shadow: 0 6px 15px rgba(22, 44, 68, 0.2) !important;
 }
 
+/* Bouton Modifier le profil */
+.btn-edit-profile.rounded-btn {
+  background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%) !important;
+  color: white !important;
+}
+
 .btn-edit-profile.rounded-btn:hover {
-  background: var(--tropical-mint) !important;
+  background: linear-gradient(135deg, var(--tropical-mint) 0%, #2cf8c1 100%) !important;
   color: var(--deep-space-blue) !important;
   transform: translateY(-3px);
   box-shadow: 0 12px 25px rgba(41, 240, 181, 0.4) !important;
+  border-color: var(--tropical-mint) !important;
 }
 
+/* MODIFIÉ : Bouton Changer mot de passe - VISIBLE PAR DÉFAUT */
 .btn-change-password.rounded-btn {
-  background: var(--agent-color) !important;
+  background: linear-gradient(135deg, var(--tuscan-sun) 0%, #f6ca6c 100%) !important;
+  color: var(--deep-space-blue) !important;
+  border: 2px solid var(--tuscan-sun) !important;
 }
 
 .btn-change-password.rounded-btn:hover {
-  background: var(--tropical-mint) !important;
+  background: linear-gradient(135deg, var(--chartreuse) 0%, #d4ff42 100%) !important;
   color: var(--deep-space-blue) !important;
   transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(186, 239, 23, 0.4) !important;
+  border-color: var(--chartreuse) !important;
+}
+
+.btn-change-password.rounded-btn mat-icon {
+  color: var(--deep-space-blue) !important;
 }
 
 /* Messages de succès */
@@ -283,6 +298,7 @@
   }
 }
 
+/* MODIFIÉ : Header des cartes - Correction de la taille de l'icône */
 .card-header {
   display: flex;
   align-items: center;
@@ -293,13 +309,16 @@
 }
 
 .card-icon {
-  font-size: 32px !important;
-  height: 32px !important;
-  width: 32px !important;
+  font-size: 28px !important; /* MODIFIÉ : de 32px à 28px */
+  height: 28px !important;
+  width: 28px !important;
   color: var(--tropical-mint);
   background: var(--mint-light);
   padding: 12px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-header h3 {
@@ -307,6 +326,13 @@
   font-size: 24px;
   font-weight: 700;
   margin: 0;
+}
+
+/* AJOUTÉ : Pour le formulaire de changement de mot de passe spécifiquement */
+.password-card .card-icon {
+  font-size: 28px !important;
+  height: 28px !important;
+  width: 28px !important;
 }
 
 /* Formulaires */
@@ -340,6 +366,33 @@ mat-form-field {
 ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
   border-color: var(--tropical-mint) !important;
   border-width: 2px !important;
+}
+
+/* AJOUTÉ : Correction des icônes dans les champs de formulaire du mot de passe */
+::ng-deep .password-card .mat-mdc-form-field .mat-icon {
+  font-size: 20px !important;
+  height: 20px !important;
+  width: 20px !important;
+}
+
+::ng-deep .password-card .mat-mdc-form-field .mat-mdc-icon-button {
+  width: 40px !important;
+  height: 40px !important;
+  padding: 8px !important;
+}
+
+::ng-deep .password-card .mat-mdc-form-field .mat-mdc-icon-button .mat-icon {
+  font-size: 20px !important;
+  height: 20px !important;
+  width: 20px !important;
+}
+
+/* AJOUTÉ : Correction des préfixes d'icônes dans les champs */
+::ng-deep .password-card .mat-mdc-form-field .mat-icon[matPrefix],
+::ng-deep .password-card .mat-mdc-form-field .mat-icon[matSuffix] {
+  font-size: 20px !important;
+  height: 20px !important;
+  width: 20px !important;
 }
 
 /* Messages d'erreur pour mot de passe */

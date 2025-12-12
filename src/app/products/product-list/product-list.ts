@@ -38,7 +38,8 @@ import { CategoryService, Category } from '../../categories/category-service/cat
 })
 export class ProductList implements OnInit {
 
-  displayedColumns: string[] = ['name', 'price', 'category', 'stock', 'actions'];
+  // MODIFIÉ : Ajout de la colonne 'id'
+  displayedColumns: string[] = ['id', 'name', 'price', 'category', 'stock', 'actions'];
 
   allProducts: Product[] = [];
   filteredAndPaged: Product[] = [];

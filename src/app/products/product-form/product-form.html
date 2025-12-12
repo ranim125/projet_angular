@@ -7,25 +7,31 @@
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Nom du produit</mat-label>
-    <input matInput formControlName="name" placeholder="Ex: Ordinateur portable" />
+    <input matInput formControlName="name" placeholder="Ex: Ordinateur portable" required />
     <mat-icon matSuffix>label</mat-icon>
     <mat-error *ngIf="form.get('name')?.hasError('required')">
       Le nom est obligatoire
+    </mat-error>
+    <mat-error *ngIf="form.get('name')?.hasError('minlength')">
+      Minimum 3 caractères
     </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Prix (DT)</mat-label>
-    <input matInput type="number" formControlName="price" placeholder="Ex: 1999.99" />
+    <input matInput type="number" formControlName="price" placeholder="Ex: 1999.99" required />
     <mat-icon matSuffix>attach_money</mat-icon>
     <mat-error *ngIf="form.get('price')?.hasError('required')">
       Le prix est obligatoire
+    </mat-error>
+    <mat-error *ngIf="form.get('price')?.hasError('min')">
+      Le prix doit être positif
     </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Catégorie</mat-label>
-    <mat-select formControlName="categoryId">
+    <mat-select formControlName="categoryId" required>
       <mat-option *ngFor="let c of categories" [value]="c.id">
         {{ c.name }}
       </mat-option>
@@ -43,6 +49,7 @@
     </mat-checkbox>
     <div class="checkbox-status rounded-full" [class.in-stock]="form.get('inStock')?.value" 
          [class.out-stock]="!form.get('inStock')?.value">
+      <mat-icon>{{ form.get('inStock')?.value ? 'check_circle' : 'cancel' }}</mat-icon>
       {{ form.get('inStock')?.value ? '✓ Disponible' : '✗ Indisponible' }}
     </div>
   </div>
@@ -52,15 +59,16 @@
     <textarea matInput rows="4" formControlName="description" 
               placeholder="Description détaillée du produit..."></textarea>
     <mat-icon matSuffix>description</mat-icon>
+    <mat-hint>Optionnel - Maximum 500 caractères</mat-hint>
   </mat-form-field>
 
   <div class="actions">
+    <button mat-button class="btn-cancel rounded-btn" type="button" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Annuler
+    </button>
     <button mat-raised-button class="btn-submit rounded-btn" type="submit" [disabled]="form.invalid">
       <mat-icon>{{ isEdit ? 'save' : 'add' }}</mat-icon>
-      {{ isEdit ? 'Enregistrer' : 'Ajouter' }}
-    </button>
-    <button mat-button class="btn-cancel rounded-btn" type="button" (click)="goBack()">
-      <mat-icon>cancel</mat-icon> Annuler
+      {{ isEdit ? 'Enregistrer' : 'Ajouter le produit' }}
     </button>
   </div>
 

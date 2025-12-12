@@ -48,11 +48,19 @@ export class ProductForm implements OnInit {
     this.categories = this.categoryService.getAll();
 
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
+      name: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100)
+      ]],
+      price: [0, [
+        Validators.required, 
+        Validators.min(0),
+        Validators.max(1000000)
+      ]],
       categoryId: ['', Validators.required],
       inStock: [true],
-      description: ['']
+      description: ['', Validators.maxLength(500)]
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -68,7 +76,10 @@ export class ProductForm implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const data = this.form.value;
 
@@ -83,5 +94,38 @@ export class ProductForm implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/products']);
+  }
+
+  // Méthode utilitaire pour obtenir les messages d'erreur
+  getErrorMessage(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    
+    if (!control || !control.errors || !control.touched) {
+      return '';
+    }
+
+    if (control.hasError('required')) {
+      return 'Ce champ est obligatoire';
+    }
+    
+    if (control.hasError('minlength')) {
+      const minLength = control.errors['minlength'].requiredLength;
+      return `Minimum ${minLength} caractères`;
+    }
+    
+    if (control.hasError('maxlength')) {
+      const maxLength = control.errors['maxlength'].requiredLength;
+      return `Maximum ${maxLength} caractères`;
+    }
+    
+    if (control.hasError('min')) {
+      return 'La valeur doit être positive';
+    }
+    
+    if (control.hasError('max')) {
+      return 'La valeur est trop élevée';
+    }
+    
+    return 'Valeur invalide';
   }
 }

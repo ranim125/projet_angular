@@ -4,22 +4,24 @@
     <mat-icon>factory</mat-icon> Ajouter un fournisseur
   </button>
 
-  <mat-form-field appearance="outline" class="search">
-    <mat-label>Rechercher</mat-label>
-    <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom du fournisseur..." />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom du fournisseur..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="search">
-    <mat-label>Région</mat-label>
-    <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, région..." />
-    <mat-icon matSuffix>location_on</mat-icon>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="filter">
+      <mat-label>Région</mat-label>
+      <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, région..." />
+      <mat-icon matSuffix>location_on</mat-icon>
+    </mat-form-field>
 
-  <div class="sort-buttons">
-    <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
-      <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
-    </button>
+    <div class="sort-buttons">
+      <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
+        <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
+      </button>
+    </div>
   </div>
 
 </div>
@@ -42,7 +44,7 @@
         </div>
         <div class="supplier-details">
           <div class="supplier-name">{{s.nom}}</div>
-          <div class="supplier-region">{{s.region}}</div>
+          <!-- MODIFIÉ : "Location" retiré de cette colonne -->
         </div>
       </div>
     </td>
@@ -112,7 +114,7 @@
   <p *ngIf="isAdmin">Commencez par ajouter votre premier fournisseur</p>
   <p *ngIf="!isAdmin">Aucun fournisseur disponible pour le moment</p>
   <button *ngIf="isAdmin" mat-raised-button class="btn-primary mt-4" (click)="goToAdd()">
-    <mat-icon>add</mat-icon>
+    <mat-icon>factory</mat-icon>
     Ajouter un fournisseur
   </button>
 </div>
@@ -125,9 +127,9 @@
   class="rounded-paginator">
 </mat-paginator>
 
-<!-- Modal détails fournisseur -->
-<div *ngIf="selectedSupplier" class="details-backdrop">
-  <mat-card class="details-card">
+<!-- MODIFIÉ : Modal détails fournisseur - CORRIGÉE -->
+<div *ngIf="selectedSupplier" class="details-backdrop" (click)="closeDetails()">
+  <mat-card class="details-card" (click)="$event.stopPropagation()">
 
     <div class="details-header">
       <div class="supplier-avatar-large rounded-full">
@@ -192,6 +194,9 @@
     <mat-card-actions>
       <button mat-button class="btn-close" (click)="closeDetails()">
         <mat-icon>close</mat-icon> Fermer
+      </button>
+      <button mat-button class="btn-edit-modal" (click)="edit(selectedSupplier.id)" *ngIf="isAdmin">
+        <mat-icon>edit</mat-icon> Modifier
       </button>
     </mat-card-actions>
 

@@ -4,43 +4,41 @@
     <mat-icon>person_add</mat-icon> Ajouter un client
   </button>
 
-  <mat-form-field appearance="outline" class="search">
-    <mat-label>Rechercher</mat-label>
-    <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom ou prénom..." />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom ou prénom..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="search">
-    <mat-label>Filtrer par adresse</mat-label>
-    <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, rue..." />
-    <mat-icon matSuffix>location_on</mat-icon>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="filter">
+      <mat-label>Adresse</mat-label>
+      <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, rue..." />
+      <mat-icon matSuffix>location_on</mat-icon>
+    </mat-form-field>
 
-  <div class="sort-buttons">
-    <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
-      <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
-    </button>
+    <div class="sort-buttons">
+      <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
+        <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
+      </button>
+    </div>
   </div>
 
 </div>
 
 <table mat-table [dataSource]="filteredAndPaged" class="mat-elevation-z2 rounded-table">
 
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> ID </th>
-    <td mat-cell *matCellDef="let c"> 
-      <span class="id-badge rounded-full">#{{c.id}}</span>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="fullName">
+  <!-- MODIFIÉ : Colonne ID supprimée -->
+  <ng-container matColumnDef="client">
     <th mat-header-cell *matHeaderCellDef> Client </th>
     <td mat-cell *matCellDef="let c">
       <div class="client-info">
-        <div class="client-avatar rounded-full">{{c.prenom.charAt(0)}}{{c.nom.charAt(0)}}</div>
+        <div class="client-avatar rounded-full">
+          {{c.prenom.charAt(0)}}{{c.nom.charAt(0)}}
+        </div>
         <div class="client-details">
           <div class="client-name">{{c.prenom}} {{c.nom}}</div>
-          <div class="client-id">ID: {{c.id}}</div>
+          <!-- MODIFIÉ : ID supprimé de cette colonne -->
         </div>
       </div>
     </td>
@@ -52,6 +50,16 @@
       <div class="phone-container">
         <mat-icon class="phone-icon">phone</mat-icon>
         <span class="phone-number">{{c.telephone}}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef> Email </th>
+    <td mat-cell *matCellDef="let c">
+      <div class="email-container">
+        <mat-icon class="email-icon">email</mat-icon>
+        <span class="email-text">{{c.email}}</span>
       </div>
     </td>
   </ng-container>
@@ -72,17 +80,18 @@
       <button mat-icon-button class="btn-details rounded-full" (click)="viewDetails(c)" matTooltip="Voir détails">
         <mat-icon>visibility</mat-icon>
       </button>
-      <button *ngIf="isAdmin" mat-icon-button class="btn-edit rounded-full" (click)="edit(c.id)" matTooltip="Modifier">
+      <button mat-icon-button class="btn-edit rounded-full" (click)="edit(c.id)" *ngIf="isAdmin" matTooltip="Modifier">
         <mat-icon>edit</mat-icon>
       </button>
-      <button *ngIf="isAdmin" mat-icon-button class="btn-delete rounded-full" (click)="delete(c.id)" matTooltip="Supprimer">
+      <button mat-icon-button class="btn-delete rounded-full" (click)="delete(c.id)" *ngIf="isAdmin" matTooltip="Supprimer">
         <mat-icon>delete</mat-icon>
       </button>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <!-- MODIFIÉ : Colonne ID supprimée -->
+  <tr mat-header-row *matHeaderRowDef="['client', 'email', 'telephone', 'adresse', 'actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['client', 'email', 'telephone', 'adresse', 'actions'];"></tr>
 
 </table>
 
@@ -94,29 +103,32 @@
   class="rounded-paginator">
 </mat-paginator>
 
-<!-- Modal détails client -->
-<div *ngIf="selectedClient" class="details-backdrop">
-  <mat-card class="details-card">
+<!-- MODIFIÉ : Modal détails client - ID retiré de l'affichage principal -->
+<div *ngIf="selectedClient" class="details-backdrop" (click)="closeDetails()">
+  <mat-card class="details-card" (click)="$event.stopPropagation()">
 
     <div class="details-header">
-      <div class="client-avatar-large rounded-full">{{selectedClient.prenom.charAt(0)}}{{selectedClient.nom.charAt(0)}}</div>
+      <div class="client-avatar-large rounded-full">
+        {{selectedClient.prenom.charAt(0)}}{{selectedClient.nom.charAt(0)}}
+      </div>
       <mat-card-title>{{selectedClient.prenom}} {{selectedClient.nom}}</mat-card-title>
     </div>
 
     <mat-card-content>
-      <div class="detail-item">
-        <mat-icon>badge</mat-icon>
-        <div>
-          <span class="detail-label">ID Client :</span>
-          <span class="detail-value id-badge rounded-full">#{{selectedClient.id}}</span>
-        </div>
-      </div>
-      
+      <!-- MODIFIÉ : ID retiré des détails ou déplacé vers un endroit moins visible -->
       <div class="detail-item">
         <mat-icon>person</mat-icon>
         <div>
           <span class="detail-label">Nom complet :</span>
           <span class="detail-value">{{selectedClient.nom}} {{selectedClient.prenom}}</span>
+        </div>
+      </div>
+      
+      <div class="detail-item">
+        <mat-icon>email</mat-icon>
+        <div>
+          <span class="detail-label">Email :</span>
+          <span class="detail-value email-highlight">{{selectedClient.email}}</span>
         </div>
       </div>
       
@@ -135,11 +147,23 @@
           <p class="detail-description">{{selectedClient.adresse}}</p>
         </div>
       </div>
+      
+      <!-- MODIFIÉ : ID ajouté ici si vous voulez le garder dans les détails mais moins visible -->
+      <div class="detail-item" style="opacity: 0.6;">
+        <mat-icon>badge</mat-icon>
+        <div>
+          <span class="detail-label">ID Client :</span>
+          <span class="detail-value" style="font-size: 12px;">#{{selectedClient.id}}</span>
+        </div>
+      </div>
     </mat-card-content>
 
     <mat-card-actions>
       <button mat-button class="btn-close" (click)="closeDetails()">
         <mat-icon>close</mat-icon> Fermer
+      </button>
+      <button mat-button class="btn-edit-modal" (click)="edit(selectedClient.id)" *ngIf="isAdmin">
+        <mat-icon>edit</mat-icon> Modifier
       </button>
     </mat-card-actions>
 

@@ -6,8 +6,9 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon'; // AJOUTER CETTE LIGNE
-import { MatTooltipModule } from '@angular/material/tooltip'; // AJOUTER CETTE LIGNE
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { CategoryService, Category } from '../category-service/category-service';
 
@@ -23,14 +24,15 @@ import { CategoryService, Category } from '../category-service/category-service'
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule, // AJOUTER CETTE LIGNE
-    MatTooltipModule // AJOUTER CETTE LIGNE
+    MatIconModule,
+    MatTooltipModule,
+    MatCardModule
   ],
   templateUrl: './category-list.html',
   styleUrls: ['./category-list.css']
 })
 export class CategoryList implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'actions'];
+  displayedColumns: string[] = [ 'name', 'actions'];
 
   categories: Category[] = [];
   filteredAndPaged: Category[] = [];
@@ -39,6 +41,8 @@ export class CategoryList implements OnInit {
   pageIndex = 0;
   searchTerm = '';
   totalItems = 0;
+
+  selectedCategory: Category | null = null;
 
   constructor(private categoryService: CategoryService, private router: Router) {}
 
@@ -76,6 +80,14 @@ export class CategoryList implements OnInit {
     this.applyFilterAndPage();
   }
 
+  viewDetails(category: Category) {
+    this.selectedCategory = category;
+  }
+
+  closeDetails() {
+    this.selectedCategory = null;
+  }
+
   edit(cat: Category) {
     this.router.navigate(['/categories/edit', cat.id]);
   }
@@ -89,5 +101,12 @@ export class CategoryList implements OnInit {
 
   goToAdd() {
     this.router.navigate(['/categories/add']);
+  }
+
+  // Méthode pour obtenir le nombre de produits par catégorie
+  getProductCount(categoryId: number): number {
+    // Cette méthode simule le compte des produits
+    // En réalité, vous auriez besoin d'un service produit
+    return Math.floor(Math.random() * 20) + 1; // Simulation
   }
 }

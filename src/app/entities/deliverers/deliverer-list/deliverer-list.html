@@ -4,27 +4,32 @@
     <mat-icon>local_shipping</mat-icon> Ajouter un livreur
   </button>
 
-  <mat-form-field appearance="outline" class="search">
-    <mat-label>Rechercher</mat-label>
-    <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom ou prénom..." />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchNom" (input)="onSearch()" placeholder="Nom ou prénom..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="search">
-    <mat-label>Adresse</mat-label>
-    <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, rue..." />
-    <mat-icon matSuffix>location_on</mat-icon>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="filter">
+      <mat-label>Adresse</mat-label>
+      <input matInput [(ngModel)]="filterAdresse" (input)="onSearch()" placeholder="Ville, rue..." />
+      <mat-icon matSuffix>location_on</mat-icon>
+    </mat-form-field>
 
-  <mat-checkbox [(ngModel)]="onlyAvailable" (change)="onSearch()" class="availability-checkbox rounded-checkbox">
-    <mat-icon>check_circle</mat-icon>
-    <span>Disponibles uniquement</span>
-  </mat-checkbox>
+    <!-- MODIFIÉ : Checkbox mieux aligné -->
+    <div class="checkbox-container">
+      <mat-checkbox [(ngModel)]="onlyAvailable" (change)="onSearch()" class="availability-checkbox rounded-checkbox">
+        <mat-icon>check_circle</mat-icon>
+        <span>Disponibles uniquement</span>
+      </mat-checkbox>
+    </div>
 
-  <div class="sort-buttons">
-    <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
-      <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
-    </button>
+    <div class="sort-buttons">
+      <button mat-button class="sort-btn rounded-full" (click)="sortByName()">
+        <mat-icon>sort_by_alpha</mat-icon> Nom A-Z
+      </button>
+    </div>
   </div>
 
 </div>
@@ -47,18 +52,8 @@
         </div>
         <div class="deliverer-details">
           <div class="deliverer-name">{{d.prenom}} {{d.nom}}</div>
-          <div class="deliverer-phone">{{d.telephone}}</div>
+          <!-- MODIFIÉ : Téléphone retiré de cette colonne -->
         </div>
-      </div>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="telephone">
-    <th mat-header-cell *matHeaderCellDef> Téléphone </th>
-    <td mat-cell *matCellDef="let d">
-      <div class="phone-container">
-        <mat-icon class="phone-icon">phone</mat-icon>
-        <span class="phone-number">{{d.telephone}}</span>
       </div>
     </td>
   </ng-container>
@@ -86,6 +81,9 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
     <td mat-cell *matCellDef="let d" class="actions-cell">
+      <button mat-icon-button class="btn-details rounded-full" (click)="viewDetails(d)" matTooltip="Voir détails">
+        <mat-icon>visibility</mat-icon>
+      </button>
       <button mat-icon-button class="btn-edit rounded-full" (click)="edit(d.id)" *ngIf="isAdmin" matTooltip="Modifier">
         <mat-icon>edit</mat-icon>
       </button>
@@ -95,8 +93,9 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <!-- MODIFIÉ : Colonne téléphone supprimée -->
+  <tr mat-header-row *matHeaderRowDef="['id', 'fullName', 'adresse', 'disponible', 'actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id', 'fullName', 'adresse', 'disponible', 'actions'];"></tr>
 
 </table>
 
@@ -108,9 +107,9 @@
   class="rounded-paginator">
 </mat-paginator>
 
-<!-- Modal détails livreur -->
-<div *ngIf="selectedDeliverer" class="details-backdrop">
-  <mat-card class="details-card">
+<!-- MODIFIÉ : Modal détails livreur - CORRIGÉE -->
+<div *ngIf="selectedDeliverer" class="details-backdrop" (click)="closeDetails()">
+  <mat-card class="details-card" (click)="$event.stopPropagation()">
 
     <div class="details-header">
       <div class="deliverer-avatar-large rounded-full" [class.available-avatar]="selectedDeliverer.disponible" [class.unavailable-avatar]="!selectedDeliverer.disponible">
@@ -175,6 +174,9 @@
     <mat-card-actions>
       <button mat-button class="btn-close" (click)="closeDetails()">
         <mat-icon>close</mat-icon> Fermer
+      </button>
+      <button mat-button class="btn-edit-modal" (click)="edit(selectedDeliverer.id)" *ngIf="isAdmin">
+        <mat-icon>edit</mat-icon> Modifier
       </button>
     </mat-card-actions>
 

@@ -21,14 +21,14 @@
   min-height: calc(100vh - 110px);
 }
 
-/* En-tête avec filtres */
+/* MODIFIÉ : En-tête avec contrôles - ESPACÉ */
 .header {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
   align-items: center;
   margin-bottom: 24px;
-  padding: 20px;
+  padding: 24px;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -49,6 +49,8 @@
   align-items: center;
   gap: 8px;
   box-shadow: 0 6px 15px rgba(22, 44, 68, 0.2) !important;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-primary.rounded-full:hover {
@@ -64,33 +66,48 @@
   width: 20px;
 }
 
-/* Champs de recherche et filtres */
-.search {
-  min-width: 180px;
+/* MODIFIÉ : Filtres - ESPACÉS */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Champs de recherche et filtres */
+.search, .filter {
+  min-width: 200px;
+  flex: 1;
+  max-width: 300px;
 }
 
 /* Style des champs de formulaire */
-.search ::ng-deep .mat-mdc-text-field-wrapper {
+::ng-deep .filters .mat-mdc-text-field-wrapper {
   background: white !important;
   border-radius: 12px !important;
 }
 
-.search ::ng-deep .mat-mdc-form-field-outline {
+::ng-deep .filters .mat-mdc-form-field-outline {
   border-color: rgba(81, 86, 89, 0.2) !important;
   border-radius: 12px !important;
 }
 
-.search ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
+::ng-deep .filters .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
   border-color: var(--tropical-mint) !important;
   border-width: 2px !important;
 }
 
-/* Boutons de tri */
+/* Icônes dans les champs */
+::ng-deep .filters .mat-icon {
+  color: var(--tropical-mint) !important;
+}
+
+/* MODIFIÉ : Boutons de tri */
 .sort-buttons {
   display: flex;
   gap: 12px;
-  margin-left: auto;
 }
 
 .sort-btn.rounded-full {
@@ -105,6 +122,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .sort-btn.rounded-full:hover {
@@ -121,7 +140,7 @@
   width: 18px;
 }
 
-/* Tableau */
+/* Tableau - CELLULES MOINS ENCOMBRÉES */
 .rounded-table {
   width: 100%;
   border-radius: 16px;
@@ -140,43 +159,152 @@ th.mat-header-cell {
   padding: 16px !important;
   border-bottom: none !important;
   text-align: center !important;
+  white-space: nowrap;
 }
 
 .actions-header {
   text-align: center !important;
 }
 
-/* Cellules */
+/* MODIFIÉ : Cellules - MOINS ENCOMBRÉES */
 td.mat-cell {
-  padding: 16px !important;
+  padding: 12px 16px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
   color: var(--charcoal);
   font-size: 14px;
   vertical-align: middle !important;
-  height: 70px !important;
-  min-height: 70px !important;
+  height: 60px !important;
+  min-height: 60px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2 !important;
 }
 
-/* Alignement spécifique pour chaque colonne */
-td.mat-cell:nth-child(1) { /* ID */
-  text-align: center;
+/* Section client - SIMPLIFIÉE */
+.client-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
-td.mat-cell:nth-child(2) { /* Client */
-  text-align: left;
+.client-avatar.rounded-full {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  line-height: 1;
+  box-shadow: 0 4px 8px rgba(22, 44, 68, 0.2);
 }
 
-td.mat-cell:nth-child(3) { /* Téléphone */
-  text-align: center;
+.client-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
-td.mat-cell:nth-child(4) { /* Adresse */
-  text-align: left;
+.client-name {
+  color: var(--deep-space-blue);
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  line-height: 1.2;
 }
 
-td.mat-cell:last-child { /* Actions */
-  text-align: center;
-  padding: 8px 16px !important;
+/* MODIFIÉ : ID retiré */
+.client-id {
+  display: none;
+}
+
+/* Email */
+.email-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-icon {
+  color: var(--tropical-mint);
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.email-text {
+  color: var(--deep-space-blue);
+  font-size: 13px;
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Téléphone */
+.phone-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phone-icon {
+  color: var(--tuscan-sun);
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.phone-number {
+  color: var(--charcoal);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Adresse */
+.address-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 250px;
+}
+
+.address-icon {
+  color: var(--light-coral);
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.address-text {
+  color: var(--charcoal);
+  font-size: 13px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  max-height: 2.8em;
 }
 
 /* Lignes alternées */
@@ -190,122 +318,30 @@ tr.mat-row:hover {
   transition: transform 0.2s ease;
 }
 
-/* Badge ID */
-.id-badge.rounded-full {
-  display: inline-block;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, var(--tropical-mint) 0%, #2cf8c1 100%);
-  color: var(--deep-space-blue);
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 9999px;
-  box-shadow: 0 4px 8px rgba(41, 240, 181, 0.2);
-}
-
-/* Section client */
-.client-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.client-avatar.rounded-full {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.client-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.client-name {
-  color: var(--deep-space-blue);
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.client-id {
-  color: var(--charcoal);
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-/* Téléphone */
-.phone-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.phone-icon {
-  color: var(--tropical-mint);
-  font-size: 18px !important;
-  height: 18px !important;
-  width: 18px !important;
-}
-
-.phone-number {
-  color: var(--deep-space-blue);
-  font-weight: 500;
-  font-size: 14px;
-}
-
-/* Adresse */
-.address-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  max-width: 300px;
-}
-
-.address-icon {
-  color: var(--light-coral);
-  font-size: 18px !important;
-  height: 18px !important;
-  width: 18px !important;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-.address-text {
-  color: var(--charcoal);
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-/* Colonne Actions */
+/* MODIFIÉ : Colonne Actions - BIEN ALIGNÉE */
 .actions-cell {
   display: flex !important;
   gap: 8px !important;
   justify-content: center !important;
   align-items: center !important;
   height: 100% !important;
-  min-height: 70px !important;
+  min-height: 60px !important;
   width: 100% !important;
+  padding: 0 !important;
 }
 
 /* Boutons d'actions arrondis */
 .actions-cell .rounded-full {
   border-radius: 9999px !important;
-  width: 44px !important;
-  height: 44px !important;
+  width: 40px !important;
+  height: 40px !important;
   margin: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   transition: all 0.3s ease !important;
   flex-shrink: 0 !important;
+  padding: 0 !important;
 }
 
 .btn-details.rounded-full {
@@ -361,6 +397,14 @@ tr.mat-row:hover {
   background: transparent !important;
 }
 
+::ng-deep .rounded-paginator .mat-mdc-paginator-page-size-label {
+  color: var(--charcoal);
+}
+
+::ng-deep .rounded-paginator .mat-mdc-paginator-range-label {
+  color: var(--charcoal);
+}
+
 /* Modal détails */
 .details-backdrop {
   position: fixed;
@@ -368,7 +412,7 @@ tr.mat-row:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,6 +448,7 @@ tr.mat-row:hover {
   display: flex;
   align-items: center;
   gap: 20px;
+  position: relative;
 }
 
 .client-avatar-large.rounded-full {
@@ -425,6 +470,7 @@ mat-card-title {
   font-weight: 600 !important;
   margin: 0 !important;
   color: white !important;
+  flex: 1;
 }
 
 mat-card-content {
@@ -436,10 +482,10 @@ mat-card-content {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 20px;
-  padding: 16px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
   background: var(--platinum);
-  border-radius: 14px;
+  border-radius: 12px;
   border: 2px solid rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
 }
@@ -456,16 +502,16 @@ mat-card-content {
 
 .detail-item mat-icon {
   color: var(--deep-space-blue);
-  font-size: 22px;
-  height: 22px;
-  width: 22px;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
   flex-shrink: 0;
 }
 
 .detail-label {
   display: block;
   color: var(--charcoal);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -475,15 +521,26 @@ mat-card-content {
 .detail-value {
   display: block;
   color: var(--deep-space-blue);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
+}
+
+.email-highlight {
+  color: var(--tropical-mint);
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--mint-light);
+  padding: 4px 12px;
+  border-radius: 8px;
+  display: inline-block;
 }
 
 .phone-highlight {
-  color: var(--tropical-mint);
+  color: var(--tuscan-sun);
   font-weight: 700;
-  font-size: 17px;
-  background: var(--mint-light);
+  font-size: 14px;
+  background: rgba(243, 193, 80, 0.1);
   padding: 4px 12px;
   border-radius: 8px;
   display: inline-block;
@@ -491,8 +548,8 @@ mat-card-content {
 
 .detail-description {
   color: var(--charcoal);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.5;
   margin: 8px 0 0 0;
 }
 
@@ -501,25 +558,25 @@ mat-card-actions {
   background: var(--platinum);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .btn-close {
   background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%) !important;
   color: white !important;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.5px;
-  padding: 12px 32px !important;
+  padding: 10px 20px !important;
   border-radius: 9999px !important;
   border: none !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
-  min-width: 140px !important;
-  height: 48px !important;
+  gap: 8px !important;
+  min-width: 100px !important;
+  height: 44px !important;
   box-shadow: 0 6px 15px rgba(22, 44, 68, 0.25) !important;
 }
 
@@ -530,20 +587,28 @@ mat-card-actions {
   box-shadow: 0 12px 25px rgba(41, 240, 181, 0.4) !important;
 }
 
-.btn-close:active {
-  transform: translateY(-1px) scale(1.02) !important;
-  box-shadow: 0 4px 10px rgba(41, 240, 181, 0.3) !important;
+.btn-edit-modal {
+  background: var(--blue-light) !important;
+  color: var(--deep-space-blue) !important;
+  border: 2px solid var(--deep-space-blue) !important;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px !important;
+  border-radius: 9999px !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-width: 100px !important;
+  height: 44px !important;
 }
 
-.btn-close mat-icon {
-  font-size: 20px !important;
-  height: 20px !important;
-  width: 20px !important;
-  transition: transform 0.3s ease !important;
-}
-
-.btn-close:hover mat-icon {
-  transform: rotate(90deg) !important;
+.btn-edit-modal:hover {
+  background: var(--deep-space-blue) !important;
+  color: white !important;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(22, 44, 68, 0.3);
 }
 
 /* Responsive */
@@ -555,8 +620,8 @@ mat-card-actions {
   .header {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 16px;
+    gap: 16px;
+    padding: 20px;
   }
   
   .btn-primary.rounded-full {
@@ -564,25 +629,42 @@ mat-card-actions {
     justify-content: center;
   }
   
-  .search {
+  .filters {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .search, .filter {
     width: 100%;
+    max-width: 100%;
   }
   
   .sort-buttons {
-    margin-left: 0;
-    justify-content: center;
     width: 100%;
-    gap: 8px;
+    justify-content: center;
   }
   
   .sort-btn.rounded-full {
-    flex: 1;
-    min-width: 140px;
+    width: 100%;
   }
   
-  table {
-    display: block;
-    overflow-x: auto;
+  td.mat-cell {
+    height: auto !important;
+    min-height: 55px !important;
+    padding: 10px 8px !important;
+  }
+  
+  .client-name {
+    max-width: 140px;
+  }
+  
+  .email-text {
+    max-width: 150px;
+  }
+  
+  .address-text {
+    max-width: 180px;
   }
   
   .actions-cell {
@@ -590,65 +672,83 @@ mat-card-actions {
   }
   
   .actions-cell .rounded-full {
-    width: 40px !important;
-    height: 40px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
   
-  .client-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  .address-container {
-    max-width: 200px;
-  }
-}
-
-@media (max-width: 480px) {
   .details-card {
     width: 95%;
     max-width: none;
   }
   
-  .details-header {
+  mat-card-actions {
     flex-direction: column;
-    text-align: center;
-    gap: 16px;
-    padding: 20px 16px !important;
+    gap: 12px;
   }
   
-  .client-avatar-large.rounded-full {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
+  .btn-close, .btn-edit-modal {
+    width: 100%;
+    min-width: unset !important;
   }
-  
-  mat-card-title {
-    font-size: 18px !important;
-  }
-  
-  mat-card-content {
-    padding: 20px 16px !important;
-  }
-  
-  .detail-item {
-    padding: 12px;
-  }
-  
+}
+
+@media (max-width: 480px) {
   .actions-cell {
-    flex-direction: column !important;
-    gap: 8px !important;
+    flex-direction: row !important;
+    gap: 4px !important;
   }
   
   .actions-cell .rounded-full {
-    width: 36px !important;
-    height: 36px !important;
+    width: 34px !important;
+    height: 34px !important;
   }
   
-  td.mat-cell {
-    height: auto !important;
-    min-height: 60px !important;
-    padding: 12px 8px !important;
+  .client-name {
+    max-width: 120px;
   }
+  
+  .email-text {
+    max-width: 130px;
+  }
+  
+  .address-text {
+    max-width: 150px;
+    font-size: 12px;
+  }
+}
+/* Dans client-list.css, cherchez et retirez/commentez ces sections : */
+
+/* Section email (à retirer) */
+.email-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-icon {
+  color: var(--tropical-mint);
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.email-text {
+  color: var(--deep-space-blue);
+  font-size: 13px;
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Et dans la modal : */
+.email-highlight {
+  color: var(--tropical-mint);
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--mint-light);
+  padding: 4px 12px;
+  border-radius: 8px;
+  display: inline-block;
 }

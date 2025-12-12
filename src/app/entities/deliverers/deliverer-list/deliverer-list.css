@@ -21,21 +21,21 @@
   min-height: calc(100vh - 110px);
 }
 
-/* En-tête avec contrôles */
-.header-controls {
+/* MODIFIÉ : En-tête avec contrôles - ESPACÉ */
+.header {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px; /* MODIFIÉ : Plus d'espace */
   align-items: center;
   margin-bottom: 24px;
-  padding: 20px;
+  padding: 24px; /* MODIFIÉ : Plus de padding */
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Bouton Ajouter - ARRONDI comme produits */
+/* Bouton Ajouter - ARRONDI */
 .btn-primary.rounded-full {
   background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%) !important;
   color: white !important;
@@ -49,6 +49,8 @@
   align-items: center;
   gap: 8px;
   box-shadow: 0 6px 15px rgba(22, 44, 68, 0.2) !important;
+  white-space: nowrap;
+  flex-shrink: 0; /* MODIFIÉ : Empêche le rétrécissement */
 }
 
 .btn-primary.rounded-full:hover {
@@ -64,19 +66,21 @@
   width: 20px;
 }
 
-/* Filtres */
+/* MODIFIÉ : Filtres - ESPACÉS et mieux organisés */
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 16px; /* MODIFIÉ : Plus d'espace */
   flex: 1;
   align-items: center;
+  justify-content: flex-end;
 }
 
 /* Champs de recherche et filtres */
 .search, .filter {
-  min-width: 180px;
+  min-width: 200px;
   flex: 1;
+  max-width: 300px;
 }
 
 /* Style des champs de formulaire */
@@ -100,34 +104,30 @@
   color: var(--tropical-mint) !important;
 }
 
-/* Checkbox disponibilité */
-.availability-checkbox {
+/* MODIFIÉ : Checkbox mieux aligné avec icône et texte */
+.checkbox-container {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  margin-left: 8px;
 }
 
 ::ng-deep .availability-checkbox .mat-mdc-checkbox {
   margin: 0 !important;
 }
 
-::ng-deep .availability-checkbox .mat-mdc-checkbox .mdc-checkbox__background {
-  border-color: var(--charcoal) !important;
-}
-
-::ng-deep .availability-checkbox .mat-mdc-checkbox.mat-accent .mdc-checkbox__background {
-  border-color: var(--tropical-mint) !important;
-  background-color: var(--tropical-mint) !important;
+::ng-deep .availability-checkbox .mdc-checkbox {
+  padding: 0 !important;
+  margin-right: 8px !important;
 }
 
 ::ng-deep .availability-checkbox .mat-mdc-checkbox-label {
-  color: var(--deep-space-blue) !important;
-  font-weight: 500 !important;
-  font-size: 14px !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
+  color: var(--deep-space-blue) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  white-space: nowrap !important; /* MODIFIÉ : Empêche le retour à la ligne */
 }
 
 ::ng-deep .availability-checkbox .mat-mdc-checkbox-label mat-icon {
@@ -135,9 +135,55 @@
   font-size: 18px !important;
   height: 18px !important;
   width: 18px !important;
+  margin-right: 4px !important;
 }
 
-/* Tableau */
+::ng-deep .availability-checkbox .mdc-checkbox__background {
+  border-color: var(--charcoal) !important;
+}
+
+::ng-deep .availability-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background {
+  border-color: var(--tropical-mint) !important;
+  background-color: var(--tropical-mint) !important;
+}
+
+/* MODIFIÉ : Boutons de tri */
+.sort-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.sort-btn.rounded-full {
+  color: var(--deep-space-blue) !important;
+  font-weight: 500;
+  background: var(--platinum) !important;
+  border: 2px solid rgba(81, 86, 89, 0.1) !important;
+  border-radius: 9999px !important;
+  padding: 10px 20px !important;
+  height: 44px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sort-btn.rounded-full:hover {
+  background: var(--tropical-mint) !important;
+  color: var(--deep-space-blue) !important;
+  border-color: var(--tropical-mint) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(41, 240, 181, 0.2);
+}
+
+.sort-btn.rounded-full mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+/* Tableau - CELLULES MOINS ENCOMBRÉES */
 .rounded-table {
   width: 100%;
   border-radius: 16px;
@@ -156,35 +202,41 @@ th.mat-header-cell {
   padding: 16px !important;
   border-bottom: none !important;
   text-align: center !important;
+  white-space: nowrap;
 }
 
 .actions-header {
   text-align: center !important;
 }
 
-/* Cellules */
+/* MODIFIÉ : Cellules - MOINS ENCOMBRÉES avec min de lignes */
 td.mat-cell {
-  padding: 16px !important;
+  padding: 12px 16px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
   color: var(--charcoal);
   font-size: 14px;
   vertical-align: middle !important;
-  height: 70px !important;
-  min-height: 70px !important;
+  height: 60px !important; /* MODIFIÉ : Plus court */
+  min-height: 60px !important; /* MODIFIÉ : Plus court */
+  white-space: nowrap; /* MODIFIÉ : Pas de retour à la ligne */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2 !important; /* MODIFIÉ : Espacement réduit */
 }
 
 /* Badge ID arrondi */
 .id-badge.rounded-full {
   display: inline-block;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: linear-gradient(135deg, var(--chartreuse) 0%, #c8ff2e 100%);
   color: var(--deep-space-blue);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 9999px;
   box-shadow: 0 4px 8px rgba(186, 239, 23, 0.2);
   min-width: 40px;
   text-align: center;
+  line-height: 1;
 }
 
 /* Badge de disponibilité */
@@ -192,13 +244,14 @@ td.mat-cell {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   border-radius: 9999px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.3px;
   min-width: 120px;
   justify-content: center;
+  line-height: 1;
 }
 
 .availability-badge.rounded-full.available {
@@ -217,6 +270,7 @@ td.mat-cell {
   font-size: 16px;
   height: 16px;
   width: 16px;
+  flex-shrink: 0;
 }
 
 /* Lignes alternées */
@@ -230,28 +284,43 @@ tr.mat-row:hover {
   transition: transform 0.2s ease;
 }
 
-/* Colonne Actions */
+/* MODIFIÉ : Colonne Actions - BIEN ALIGNÉE */
 .actions-cell {
   display: flex !important;
   gap: 8px !important;
   justify-content: center !important;
   align-items: center !important;
   height: 100% !important;
-  min-height: 70px !important;
+  min-height: 60px !important;
   width: 100% !important;
+  padding: 0 !important;
 }
 
-/* Boutons d'actions arrondis - ICÔNES SEULES */
+/* Boutons d'actions arrondis */
 .actions-cell .rounded-full {
   border-radius: 9999px !important;
-  width: 44px !important;
-  height: 44px !important;
+  width: 40px !important;
+  height: 40px !important;
   margin: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   transition: all 0.3s ease !important;
   flex-shrink: 0 !important;
+  padding: 0 !important;
+}
+
+.btn-details.rounded-full {
+  background: var(--mint-light) !important;
+  color: var(--tropical-mint) !important;
+  border: 2px solid var(--tropical-mint) !important;
+}
+
+.btn-details.rounded-full:hover {
+  background: var(--tropical-mint) !important;
+  color: var(--deep-space-blue) !important;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(41, 240, 181, 0.3);
 }
 
 .btn-edit.rounded-full {
@@ -302,98 +371,25 @@ tr.mat-row:hover {
   color: var(--charcoal);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  :host {
-    padding: 16px;
-  }
-  
-  .header-controls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    padding: 16px;
-  }
-  
-  .btn-primary.rounded-full {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .filters {
-    flex-direction: column;
-  }
-  
-  .search, .filter {
-    width: 100%;
-  }
-  
-  .availability-checkbox {
-    margin-left: 0;
-    justify-content: flex-start;
-  }
-  
-  .actions-cell {
-    gap: 4px !important;
-  }
-  
-  .actions-cell .rounded-full {
-    width: 40px !important;
-    height: 40px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  td.mat-cell {
-    padding: 12px 8px !important;
-    font-size: 13px !important;
-  }
-  
-  th.mat-header-cell {
-    padding: 12px 8px !important;
-    font-size: 12px !important;
-  }
-  
-  .actions-cell {
-    flex-direction: column !important;
-    gap: 8px !important;
-  }
-  
-  .actions-cell .rounded-full {
-    width: 36px !important;
-    height: 36px !important;
-  }
-  
-  .id-badge.rounded-full {
-    padding: 6px 12px !important;
-    font-size: 12px !important;
-  }
-  
-  .availability-badge.rounded-full {
-    min-width: 100px;
-    padding: 6px 12px !important;
-    font-size: 12px !important;
-  }
-}
-/* ... Gardez tout le CSS existant jusqu'à la partie "Badge de disponibilité" ... */
-
-/* Section livreur */
+/* Section livreur - SIMPLIFIÉE */
 .deliverer-info {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
 }
 
 .deliverer-avatar.rounded-full {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .available-avatar {
@@ -411,18 +407,19 @@ tr.mat-row:hover {
 .deliverer-details {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0; /* Permet au texte de s'ellipser */
 }
 
 .deliverer-name {
   color: var(--deep-space-blue);
   font-weight: 600;
-  font-size: 15px;
-}
-
-.deliverer-phone {
-  color: var(--charcoal);
-  font-size: 12px;
-  opacity: 0.7;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  line-height: 1.2;
 }
 
 /* Adresse */
@@ -430,25 +427,35 @@ tr.mat-row:hover {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  max-width: 300px;
+  max-width: 250px;
 }
 
 .address-icon {
   color: var(--tuscan-sun);
-  font-size: 18px !important;
-  height: 18px !important;
-  width: 18px !important;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
   margin-top: 2px;
   flex-shrink: 0;
 }
 
 .address-text {
   color: var(--charcoal);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  max-height: 2.8em;
 }
-
-/* ... Gardez le reste du CSS existant jusqu'à la fin ... */
 
 /* Modal détails */
 .details-backdrop {
@@ -457,7 +464,7 @@ tr.mat-row:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -510,13 +517,14 @@ tr.mat-row:hover {
 }
 
 .status-badge-large.rounded-full {
-  padding: 8px 20px;
+  padding: 6px 16px;
   border-radius: 9999px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
 }
 
 mat-card-title {
@@ -536,10 +544,10 @@ mat-card-content {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 20px;
-  padding: 16px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
   background: var(--platinum);
-  border-radius: 14px;
+  border-radius: 12px;
   border: 2px solid rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
 }
@@ -556,16 +564,16 @@ mat-card-content {
 
 .detail-item mat-icon {
   color: var(--deep-space-blue);
-  font-size: 22px;
-  height: 22px;
-  width: 22px;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
   flex-shrink: 0;
 }
 
 .detail-label {
   display: block;
   color: var(--charcoal);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -575,15 +583,16 @@ mat-card-content {
 .detail-value {
   display: block;
   color: var(--deep-space-blue);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .phone-highlight {
-  color: var(--agent-color);
+  color: var(--tuscan-sun);
   font-weight: 700;
-  font-size: 17px;
-  background: var(--agent-light);
+  font-size: 15px;
+  background: rgba(243, 193, 80, 0.1);
   padding: 4px 12px;
   border-radius: 8px;
   display: inline-block;
@@ -593,17 +602,18 @@ mat-card-content {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   border-radius: 9999px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 8px;
+  line-height: 1;
 }
 
 .detail-description {
   color: var(--charcoal);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.5;
   margin: 8px 0 0 0;
   font-style: italic;
   opacity: 0.8;
@@ -614,25 +624,25 @@ mat-card-actions {
   background: var(--platinum);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .btn-close {
   background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3557 100%) !important;
   color: white !important;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.5px;
-  padding: 12px 32px !important;
+  padding: 10px 20px !important;
   border-radius: 9999px !important;
   border: none !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
-  min-width: 140px !important;
-  height: 48px !important;
+  gap: 8px !important;
+  min-width: 100px !important;
+  height: 44px !important;
   box-shadow: 0 6px 15px rgba(22, 44, 68, 0.25) !important;
 }
 
@@ -643,18 +653,129 @@ mat-card-actions {
   box-shadow: 0 12px 25px rgba(41, 240, 181, 0.4) !important;
 }
 
-.btn-close:active {
-  transform: translateY(-1px) scale(1.02) !important;
-  box-shadow: 0 4px 10px rgba(41, 240, 181, 0.3) !important;
+.btn-edit-modal {
+  background: var(--blue-light) !important;
+  color: var(--deep-space-blue) !important;
+  border: 2px solid var(--deep-space-blue) !important;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px !important;
+  border-radius: 9999px !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-width: 100px !important;
+  height: 44px !important;
 }
 
-.btn-close mat-icon {
-  font-size: 20px !important;
-  height: 20px !important;
-  width: 20px !important;
-  transition: transform 0.3s ease !important;
+.btn-edit-modal:hover {
+  background: var(--deep-space-blue) !important;
+  color: white !important;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(22, 44, 68, 0.3);
 }
 
-.btn-close:hover mat-icon {
-  transform: rotate(90deg) !important;
+/* Responsive */
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  .btn-primary.rounded-full {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .filters {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .search, .filter {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .checkbox-container {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+  
+  .sort-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .sort-btn.rounded-full {
+    width: 100%;
+  }
+  
+  td.mat-cell {
+    height: auto !important;
+    min-height: 55px !important;
+    padding: 10px 8px !important;
+  }
+  
+  .deliverer-name {
+    max-width: 120px;
+  }
+  
+  .address-text {
+    max-width: 180px;
+  }
+  
+  .actions-cell {
+    gap: 4px !important;
+  }
+  
+  .actions-cell .rounded-full {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  .details-card {
+    width: 95%;
+    max-width: none;
+  }
+  
+  mat-card-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .btn-close, .btn-edit-modal {
+    width: 100%;
+    min-width: unset !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions-cell {
+    flex-direction: row !important;
+    gap: 4px !important;
+  }
+  
+  .actions-cell .rounded-full {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  
+  .deliverer-name {
+    max-width: 100px;
+  }
+  
+  .address-text {
+    max-width: 150px;
+    font-size: 12px;
+  }
 }
