@@ -1,7 +1,10 @@
 [
   { "id": 1, "name": "Électronique" },
-  { "id": 2, "name": "Vêtements" },
-  { "id": 3, "name": "Alimentaire" },
-  { "id": 4, "name": "Mobilier" },
-  { "id": 5, "name": "Livres" }
+  { "id": 2, "name": "Vêtements & Mode" },
+  { "id": 3, "name": "Alimentaire & Épicerie" },
+  { "id": 4, "name": "Maison & Mobilier" },
+  { "id": 5, "name": "Livres & Papeterie" },
+  { "id": 6, "name": "Beauté & Soins" },
+  { "id": 7, "name": "Artisanat & Décoration" },
+  { "id": 8, "name": "Sport & Loisirs" }
 ]

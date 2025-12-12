@@ -181,7 +181,7 @@ export class GraphsComponent implements AfterViewInit {
 
     const regionCounts = new Map();
     items.forEach(item => {
-      const region = item.region || 'Non spécifié';
+      const region = item.region || item.adresse || 'Inconnu';
       regionCounts.set(region, (regionCounts.get(region) || 0) + 1);
     });
 

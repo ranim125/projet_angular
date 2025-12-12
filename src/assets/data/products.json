@@ -1,26 +1,82 @@
 [
   {
     "id": 1,
-    "name": "Ordinateur Portable",
-    "price": 2500,
+    "name": "Ordinateur Portable HP Pavilion 15″",
+    "price": 2890,
     "categoryId": 1,
     "inStock": true,
-    "description": "PC performant pour le travail."
+    "description": "PC puissant i5 12ème génération, 16 Go RAM, 512 Go SSD. Idéal pour le travail et les études."
   },
   {
     "id": 2,
-    "name": "T-shirt",
-    "price": 45,
+    "name": "T-shirt basique unisexe",
+    "price": 49,
     "categoryId": 2,
     "inStock": true,
-    "description": "T-shirt en coton."
+    "description": "T-shirt 100% coton peigné, coupe confortable. Disponible en blanc, noir et gris."
   },
   {
     "id": 3,
-    "name": "Table en bois",
-    "price": 350,
+    "name": "Table à manger en bois massif 6 personnes",
+    "price": 1250,
+    "categoryId": 4,
+    "inStock": true,
+    "description": "Table en bois de hêtre tunisien faite main à Nabeul, style moderne rustique."
+  },
+  {
+    "id": 4,
+    "name": "Smartphone Samsung Galaxy A55-5G",
+    "price": 1399,
+    "categoryId": 1,
+    "inStock": true,
+    "description": "Téléphone neuf garanti 2 ans, 128 Go, caméra 50 MP."
+  },
+  {
+    "id": 5,
+    "name": "Jeans slim homme",
+    "price": 129,
+    "categoryId": 2,
+    "inStock": true,
+    "description": "Jeans coupe slim, tissu stretch très confortable. Fabriqué en Tunisie."
+  },
+  {
+    "id": 6,
+    "name": "Huile d’olive extra vierge 1L – Zarzis",
+    "price": 42,
+    "categoryId": 3,
+    "inStock": true,
+    "description": "Huile d’olive première pression à froid, récolte 2025, goût fruité intense."
+  },
+  {
+    "id": 7,
+    "name": "Harissa artisanale Le Phénicien 350g",
+    "price": 15,
+    "categoryId": 3,
+    "inStock": true,
+    "description": "Harissa traditionnelle de Nabeul, piments séchés au soleil."
+  },
+  {
+    "id": 8,
+    "name": "Salon complet 7 places style moderne",
+    "price": 4200,
     "categoryId": 4,
     "inStock": false,
-    "description": "Table de salle à manger."
+    "description": "Salon angle + 2 poufs, tissu anti-taches, fabrication Sfax."
+  },
+  {
+    "id": 9,
+    "name": "Roman « La Montagne du Lion » – Mohamed Laroussi Métaoui",
+    "price": 35,
+    "categoryId": 5,
+    "inStock": true,
+    "description": "Best-seller tunisien 2024, édition Cérès."
+  },
+  {
+    "id": 10,
+    "name": "Tapis margoum traditionnel 160x230",
+    "price": 650,
+    "categoryId": 7,
+    "inStock": true,
+    "description": "Tapis berbère tissé main à Kairouan, motifs géométriques rouges et beiges."
   }
 ]
