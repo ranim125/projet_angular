@@ -11,6 +11,7 @@ export class ResetDataService {
     { key: 'suppliers',  file: '/assets/data/suppliers.json' },
     { key: 'clients',    file: '/assets/data/clients.json' },
     { key: 'deliverers', file: '/assets/data/deliverers.json' },
+    { key: 'agents', file: '/assets/data/agents.json' }
     // Ajoute ici les autres si tu en as (agents, etc.)
   ];
 

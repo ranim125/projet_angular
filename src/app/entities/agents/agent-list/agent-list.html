@@ -12,7 +12,7 @@
 
   <mat-form-field appearance="outline" class="search">
     <mat-label>Rôle</mat-label>
-    <input matInput [(ngModel)]="filterRole" (input)="onSearch()" placeholder="Admin, Agent..." />
+    <input matInput [(ngModel)]="filterRole" (input)="onSearch()" placeholder="admin, agent..." />
     <mat-icon matSuffix>badge</mat-icon>
   </mat-form-field>
 
@@ -34,10 +34,10 @@
   </ng-container>
 
   <ng-container matColumnDef="fullName">
-    <th mat-header-cell *matHeaderCellDef> Agent </th>
+    <th mat-header-cell *matHeaderCellDef> agent </th>
     <td mat-cell *matCellDef="let a">
       <div class="agent-info">
-        <div class="agent-avatar rounded-full" [class.admin-avatar]="a.role === 'Admin'" [class.agent-avatar]="a.role === 'Agent'">
+        <div class="agent-avatar rounded-full" [class.admin-avatar]="a.role === 'admin'" [class.agent-avatar]="a.role === 'agent'">
           {{a.prenom.charAt(0)}}{{a.nom.charAt(0)}}
         </div>
         <div class="agent-details">
@@ -61,8 +61,8 @@
   <ng-container matColumnDef="role">
     <th mat-header-cell *matHeaderCellDef> Rôle </th>
     <td mat-cell *matCellDef="let a">
-      <span class="role-badge rounded-full" [class.admin-badge]="a.role === 'Admin'" [class.agent-badge]="a.role === 'Agent'">
-        <mat-icon>{{ a.role === 'Admin' ? 'admin_panel_settings' : 'person' }}</mat-icon>
+      <span class="role-badge rounded-full" [class.admin-badge]="a.role === 'admin'" [class.agent-badge]="a.role === 'agent'">
+        <mat-icon>{{ a.role === 'admin' ? 'admin_panel_settings' : 'person' }}</mat-icon>
         {{a.role}}
       </span>
     </td>
@@ -98,11 +98,11 @@
   <mat-card class="details-card">
 
     <div class="details-header">
-      <div class="agent-avatar-large rounded-full" [class.admin-avatar]="selectedAgent.role === 'Admin'" [class.agent-avatar]="selectedAgent.role === 'Agent'">
+      <div class="agent-avatar-large rounded-full" [class.admin-avatar]="selectedAgent.role === 'admin'" [class.agent-avatar]="selectedAgent.role === 'agent'">
         {{selectedAgent.prenom.charAt(0)}}{{selectedAgent.nom.charAt(0)}}
       </div>
       <mat-card-title>{{selectedAgent.prenom}} {{selectedAgent.nom}}</mat-card-title>
-      <span class="role-badge-large rounded-full" [class.admin-badge]="selectedAgent.role === 'Admin'" [class.agent-badge]="selectedAgent.role === 'Agent'">
+      <span class="role-badge-large rounded-full" [class.admin-badge]="selectedAgent.role === 'admin'" [class.agent-badge]="selectedAgent.role === 'agent'">
         {{selectedAgent.role}}
       </span>
     </div>
@@ -111,7 +111,7 @@
       <div class="detail-item">
         <mat-icon>badge</mat-icon>
         <div>
-          <span class="detail-label">ID Agent :</span>
+          <span class="detail-label">ID agent :</span>
           <span class="detail-value id-badge rounded-full">#{{selectedAgent.id}}</span>
         </div>
       </div>
@@ -144,12 +144,12 @@
         <mat-icon>verified_user</mat-icon>
         <div>
           <span class="detail-label">Rôle :</span>
-          <span class="role-badge-inline rounded-full" [class.admin-badge]="selectedAgent.role === 'Admin'" [class.agent-badge]="selectedAgent.role === 'Agent'">
-            <mat-icon>{{ selectedAgent.role === 'Admin' ? 'admin_panel_settings' : 'person' }}</mat-icon>
+          <span class="role-badge-inline rounded-full" [class.admin-badge]="selectedAgent.role === 'admin'" [class.agent-badge]="selectedAgent.role === 'agent'">
+            <mat-icon>{{ selectedAgent.role === 'admin' ? 'admin_panel_settings' : 'person' }}</mat-icon>
             {{selectedAgent.role}}
           </span>
           <p class="detail-description">
-            {{ selectedAgent.role === 'Admin' ? 'Accès complet à toutes les fonctionnalités du système.' : 'Accès limité aux fonctionnalités de gestion.' }}
+            {{ selectedAgent.role === 'admin' ? 'Accès complet à toutes les fonctionnalités du système.' : 'Accès limité aux fonctionnalités de gestion.' }}
           </p>
         </div>
       </div>
