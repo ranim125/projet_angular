@@ -6,7 +6,7 @@ export interface Client {
   nom: string;
   prenom: string;
   telephone: string;
-  email: string; // AJOUTEZ CETTE LIGNE
+  
   adresse: string;
 }
 

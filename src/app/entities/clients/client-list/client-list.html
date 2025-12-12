@@ -54,15 +54,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef> Email </th>
-    <td mat-cell *matCellDef="let c">
-      <div class="email-container">
-        <mat-icon class="email-icon">email</mat-icon>
-        <span class="email-text">{{c.email}}</span>
-      </div>
-    </td>
-  </ng-container>
+  
 
   <ng-container matColumnDef="adresse">
     <th mat-header-cell *matHeaderCellDef> Adresse </th>
@@ -90,8 +82,8 @@
   </ng-container>
 
   <!-- MODIFIÉ : Colonne ID supprimée -->
-  <tr mat-header-row *matHeaderRowDef="['client', 'email', 'telephone', 'adresse', 'actions']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['client', 'email', 'telephone', 'adresse', 'actions'];"></tr>
+  <tr mat-header-row *matHeaderRowDef="['client', 'telephone', 'adresse', 'actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['client', 'telephone', 'adresse', 'actions'];"></tr>
 
 </table>
 
@@ -124,13 +116,7 @@
         </div>
       </div>
       
-      <div class="detail-item">
-        <mat-icon>email</mat-icon>
-        <div>
-          <span class="detail-label">Email :</span>
-          <span class="detail-value email-highlight">{{selectedClient.email}}</span>
-        </div>
-      </div>
+      
       
       <div class="detail-item">
         <mat-icon>phone</mat-icon>
