@@ -28,7 +28,6 @@
 
 <table mat-table [dataSource]="filteredAndPaged" class="mat-elevation-z2 rounded-table">
 
-  <!-- MODIFIÉ : Colonne ID supprimée -->
   <ng-container matColumnDef="client">
     <th mat-header-cell *matHeaderCellDef> Client </th>
     <td mat-cell *matCellDef="let c">
@@ -38,7 +37,6 @@
         </div>
         <div class="client-details">
           <div class="client-name">{{c.prenom}} {{c.nom}}</div>
-          <!-- MODIFIÉ : ID supprimé de cette colonne -->
         </div>
       </div>
     </td>
@@ -81,7 +79,7 @@
     </td>
   </ng-container>
 
-  <!-- MODIFIÉ : Colonne ID supprimée -->
+  
   <tr mat-header-row *matHeaderRowDef="['client', 'telephone', 'adresse', 'actions']"></tr>
   <tr mat-row *matRowDef="let row; columns: ['client', 'telephone', 'adresse', 'actions'];"></tr>
 
@@ -95,7 +93,6 @@
   class="rounded-paginator">
 </mat-paginator>
 
-<!-- MODIFIÉ : Modal détails client - ID retiré de l'affichage principal -->
 <div *ngIf="selectedClient" class="details-backdrop" (click)="closeDetails()">
   <mat-card class="details-card" (click)="$event.stopPropagation()">
 
@@ -107,7 +104,6 @@
     </div>
 
     <mat-card-content>
-      <!-- MODIFIÉ : ID retiré des détails ou déplacé vers un endroit moins visible -->
       <div class="detail-item">
         <mat-icon>person</mat-icon>
         <div>

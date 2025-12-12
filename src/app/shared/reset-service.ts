@@ -1,4 +1,4 @@
-// src/app/shared/reset-data.service.ts
+
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
@@ -12,7 +12,7 @@ export class ResetDataService {
     { key: 'clients',    file: '/assets/data/clients.json' },
     { key: 'deliverers', file: '/assets/data/deliverers.json' },
     { key: 'agents', file: '/assets/data/agents.json' }
-    // Ajoute ici les autres si tu en as (agents, etc.)
+    
   ];
 
   constructor() {
