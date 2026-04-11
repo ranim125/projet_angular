@@ -45,7 +45,7 @@ export class ProductForm implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.categoryService.getAll();
+    this.categoryService.getAll().subscribe(c => this.categories = c);
 
     this.form = this.fb.group({
       name: ['', [

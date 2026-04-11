@@ -4,6 +4,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 
+import { ProductService } from '../../products/product-service/product-service';
+import { CategoryService } from '../../categories/category-service/category-service';
+import { ClientService } from '../../entities/clients/client-service/client-service';
+import { AgentService } from '../../entities/agents/agent-service/agent-service';
+import { SupplierService } from '../../entities/suppliers/supplier-service/supplier-service';
+import { DelivererService } from '../../entities/deliverers/deliverer-service/deliverer-service';
+
 @Component({
   selector: 'app-stats',
   standalone: true,
@@ -18,28 +25,25 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class StatsComponent implements OnInit {
 
-  totalProducts = 0;
   totalCategories = 0;
-  totalClients = 0;
-  totalAgents = 0;
-  totalSuppliers = 0;
-  totalDeliverers = 0;
-  ruptureProducts = 0;
+
+  constructor(
+    public productService: ProductService,
+    public categoryService: CategoryService,
+    public clientService: ClientService,
+    public agentService: AgentService,
+    public supplierService: SupplierService,
+    public delivererService: DelivererService
+  ) {}
 
   ngOnInit() {
-    const products = JSON.parse(localStorage.getItem('products') || '[]');
-    const categories = JSON.parse(localStorage.getItem('categories') || '[]');
-    const clients = JSON.parse(localStorage.getItem('clients') || '[]');
-    const agents = JSON.parse(localStorage.getItem('agents') || '[]');
-    const suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
-    const deliverers = JSON.parse(localStorage.getItem('deliverers') || '[]');
-
-    this.totalProducts = products.length;
-    this.ruptureProducts = products.filter((p: any) => !p.inStock).length;
-    this.totalCategories = categories.length;
-    this.totalClients = clients.length;
-    this.totalAgents = agents.length;
-    this.totalSuppliers = suppliers.length;
-    this.totalDeliverers = deliverers.length;
+    this.categoryService.getAll().subscribe(c => this.totalCategories = c.length);
   }
+
+  get totalProducts() { return this.productService.getAll().length; }
+  get ruptureProducts() { return this.productService.getAll().filter(p => !p.inStock).length; }
+  get totalClients() { return this.clientService.getAll().length; }
+  get totalAgents() { return this.agentService.getAll().length; }
+  get totalSuppliers() { return this.supplierService.getAll().length; }
+  get totalDeliverers() { return this.delivererService.getAll().length; }
 }

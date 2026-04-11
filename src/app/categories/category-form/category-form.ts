@@ -39,12 +39,13 @@ export class CategoryForm implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2)]]
     });
 
-    const id = this.route.snapshot.paramMap.get('id');
+      const id = this.route.snapshot.paramMap.get('id');
     if (id && id !== 'add') {
       this.isEdit = true;
       this.categoryId = +id;
-      const cat = this.categoryService.getById(this.categoryId);
-      if (cat) this.form.patchValue({ name: cat.name });
+      this.categoryService.getById(this.categoryId).subscribe(cat => {
+        if (cat) this.form.patchValue({ name: cat.name });
+      });
     }
   }
 
@@ -54,12 +55,14 @@ export class CategoryForm implements OnInit {
     const name = this.form.value.name.trim();
 
     if (this.isEdit && this.categoryId) {
-      this.categoryService.update({ id: this.categoryId, name });
+      this.categoryService.update({ id: this.categoryId, name }).subscribe(() => {
+        this.router.navigate(['/categories']); // MODIFIÉ
+      });
     } else {
-      this.categoryService.add(name);
+      this.categoryService.add(name).subscribe(() => {
+        this.router.navigate(['/categories']); // MODIFIÉ
+      });
     }
-
-    this.router.navigate(['/categories']); // MODIFIÉ
   }
 
   goBack(): void {

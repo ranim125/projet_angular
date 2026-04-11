@@ -1,5 +1,5 @@
-// src/app/entities/agents/agent-service/agent-service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { isAdmin } from '../../../shared/role-utils';
 
 export interface Agent {
@@ -13,59 +13,34 @@ export interface Agent {
 
 @Injectable({ providedIn: 'root' })
 export class AgentService {
-  private readonly key = 'agents';
+  private apiUrl = 'http://localhost:3000/api/agents';
 
-  private initDefaultsIfNeeded(): void {
-    if (localStorage.getItem(this.key)) return;
-
-    fetch('/assets/data/agents.json')
-      .then(response => response.json())
-      .then(data => {
-        localStorage.setItem(this.key, JSON.stringify(data));
-        console.log('Agents chargés depuis JSON →', data.length, 'agents');
-      })
-      .catch(err => {
-        console.warn('Impossible de charger agents.json, on met des valeurs par défaut', err);
-        const fallback: Agent[] = [
-          { id: 1, nom: 'Admin', prenom: 'Super', email: 'admin@depot.tn', telephone: '71 234 567', role: 'admin' },
-          { id: 2, nom: 'Jarray', prenom: 'Karim', email: 'karim@depot.tn', telephone: '98 123 456', role: 'agent' },
-          { id: 3, nom: 'Trabelsi', prenom: 'Amina', email: 'amina@depot.tn', telephone: '22 345 678', role: 'agent' }
-        ];
-        localStorage.setItem(this.key, JSON.stringify(fallback));
-      });
-  }
+  constructor(private http: HttpClient) {}
 
   getAll(): Agent[] {
-    this.initDefaultsIfNeeded();
-    const data = localStorage.getItem(this.key);
-    return data ? JSON.parse(data) : [];
+    const list: Agent[] = [];
+    this.http.get<Agent[]>(this.apiUrl).subscribe(data => list.push(...data));
+    return list;
   }
 
   getById(id: number): Agent | undefined {
-    return this.getAll().find(a => a.id === id);
+    let item = {} as Agent;
+    this.http.get<Agent>(`${this.apiUrl}/${id}`).subscribe(data => Object.assign(item, data));
+    return item;
   }
 
   add(agent: Omit<Agent, 'id'>): void {
     if (!isAdmin()) return;
-    const list = this.getAll();
-    const newId = list.length ? Math.max(...list.map(a => a.id)) + 1 : 1;
-    list.push({ ...agent, id: newId } as Agent);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.post(this.apiUrl, agent).subscribe();
   }
 
   update(agent: Agent): void {
     if (!isAdmin()) return;
-    const list = this.getAll();
-    const index = list.findIndex(a => a.id === agent.id);
-    if (index > -1) {
-      list[index] = agent;
-      localStorage.setItem(this.key, JSON.stringify(list));
-    }
+    this.http.put(`${this.apiUrl}/${agent.id}`, agent).subscribe();
   }
 
   delete(id: number): void {
     if (!isAdmin()) return;
-    const list = this.getAll().filter(a => a.id !== id);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe();
   }
 }

@@ -63,7 +63,7 @@ export class ProductList implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.categoryService.getAll();
+    this.categoryService.getAll().subscribe(c => this.categories = c);
     this.loadProducts();
   }
 

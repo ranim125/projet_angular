@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { isAdmin } from '../../../shared/role-utils';
 
 export interface Deliverer {
@@ -12,42 +13,34 @@ export interface Deliverer {
 
 @Injectable({ providedIn: 'root' })
 export class DelivererService {
-  private readonly key = 'deliverers';
+  private apiUrl = 'http://localhost:3000/api/deliverers';
 
-  private initDefaultsIfNeeded(): void {
-    if (localStorage.getItem(this.key)) return;
-    fetch('/assets/data/deliverers.json')
-      .then(r => r.json())
-      .then(data => localStorage.setItem(this.key, JSON.stringify(data)))
-      .catch(() => localStorage.setItem(this.key, JSON.stringify([])));
-  }
+  constructor(private http: HttpClient) {}
 
   getAll(): Deliverer[] {
-    this.initDefaultsIfNeeded();
-    return JSON.parse(localStorage.getItem(this.key) || '[]');
+    const list: Deliverer[] = [];
+    this.http.get<Deliverer[]>(this.apiUrl).subscribe(data => list.push(...data));
+    return list;
   }
 
   getById(id: number): Deliverer | undefined {
-    return this.getAll().find(d => d.id === id);
+    let item = {} as Deliverer;
+    this.http.get<Deliverer>(`${this.apiUrl}/${id}`).subscribe(data => Object.assign(item, data));
+    return item;
   }
 
   add(deliverer: Omit<Deliverer, 'id'>): void {
     if (!isAdmin()) return;
-    const list = this.getAll();
-    const newId = list.length ? Math.max(...list.map(d => d.id)) + 1 : 1;
-    list.push({ ...deliverer, id: newId } as Deliverer);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.post(this.apiUrl, deliverer).subscribe();
   }
 
   update(deliverer: Deliverer): void {
     if (!isAdmin()) return;
-    const list = this.getAll();
-    const i = list.findIndex(d => d.id === deliverer.id);
-    if (i > -1) { list[i] = deliverer; localStorage.setItem(this.key, JSON.stringify(list)); }
+    this.http.put(`${this.apiUrl}/${deliverer.id}`, deliverer).subscribe();
   }
 
   delete(id: number): void {
     if (!isAdmin()) return;
-    localStorage.setItem(this.key, JSON.stringify(this.getAll().filter(d => d.id !== id)));
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe();
   }
 }

@@ -1,5 +1,6 @@
-// src/app/categories/category-service/category-service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Category {
   id: number;
@@ -8,46 +9,27 @@ export interface Category {
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
+  private apiUrl = 'http://localhost:3000/api/categories';
 
-  private readonly key = 'categories';
+  constructor(private http: HttpClient) {}
 
-  getAll(): Category[] {
-    // Si localStorage vide → on charge directement le JSON en dur
-    if (!localStorage.getItem(this.key)) {
-      const defaults: Category[] = [
-        { id: 1, name: "Électronique" },
-        { id: 2, name: "Vêtements" },
-        { id: 3, name: "Alimentaire" },
-        { id: 4, name: "Mobilier" },
-        { id: 5, name: "Livres" }
-      ];
-      localStorage.setItem(this.key, JSON.stringify(defaults));
-    }
-
-    const data = localStorage.getItem(this.key);
-    return data ? JSON.parse(data) : [];
+  getAll(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.apiUrl);
   }
 
-  getById(id: number): Category | undefined {
-    return this.getAll().find(c => c.id === id);
+  getById(id: number): Observable<Category> {
+    return this.http.get<Category>(`${this.apiUrl}/${id}`);
   }
 
-  add(name: string): void {
-    const list = this.getAll();
-    const newId = list.length ? Math.max(...list.map(c => c.id)) + 1 : 1;
-    list.push({ id: newId, name });
-    localStorage.setItem(this.key, JSON.stringify(list));
+  add(name: string): Observable<Category> {
+    return this.http.post<Category>(this.apiUrl, { name });
   }
 
-  update(cat: Category): void {
-    const list = this.getAll();
-    const i = list.findIndex(c => c.id === cat.id);
-    if (i > -1) list[i] = cat;
-    localStorage.setItem(this.key, JSON.stringify(list));
+  update(cat: Category): Observable<Category> {
+    return this.http.put<Category>(`${this.apiUrl}/${cat.id}`, cat);
   }
 
-  delete(id: number): void {
-    const list = this.getAll().filter(c => c.id !== id);
-    localStorage.setItem(this.key, JSON.stringify(list));
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

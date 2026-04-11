@@ -51,8 +51,13 @@ export class CategoryList implements OnInit {
   }
 
   loadCategories() {
-    this.categories = this.categoryService.getAll();
-    this.applyFilterAndPage();
+    this.categoryService.getAll().subscribe({
+      next: (data) => {
+        this.categories = data;
+        this.applyFilterAndPage();
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   applyFilterAndPage() {
@@ -94,8 +99,9 @@ export class CategoryList implements OnInit {
 
   delete(id: number) {
     if (confirm('Supprimer cette catégorie ?')) {
-      this.categoryService.delete(id);
-      this.loadCategories();
+      this.categoryService.delete(id).subscribe(() => {
+        this.loadCategories();
+      });
     }
   }
 

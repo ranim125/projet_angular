@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 export interface Product {
   id: number;
@@ -11,44 +12,35 @@ export interface Product {
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private readonly key = 'products';
+  private apiUrl = 'http://localhost:3000/api/products';
 
-  private initDefaultsIfNeeded(): void {
-    if (localStorage.getItem(this.key)) return;
-
-    fetch('/assets/data/products.json')
-      .then(r => r.json())
-      .then(data => localStorage.setItem(this.key, JSON.stringify(data)))
-      .catch(() => localStorage.setItem(this.key, JSON.stringify([])));
-  }
+  constructor(private http: HttpClient) {}
 
   getAll(): Product[] {
-    this.initDefaultsIfNeeded();
-    return JSON.parse(localStorage.getItem(this.key) || '[]');
+    const list: Product[] = [];
+    this.http.get<Product[]>(this.apiUrl).subscribe(data => {
+      list.push(...data);
+    });
+    return list;
   }
 
   getById(id: number): Product | undefined {
-    return this.getAll().find(p => p.id === id);
+    let item = {} as Product;
+    this.http.get<Product>(`${this.apiUrl}/${id}`).subscribe(data => {
+      Object.assign(item, data);
+    });
+    return item;
   }
 
   add(prod: Omit<Product, 'id'>): void {
-    const list = this.getAll();
-    const newId = list.length ? Math.max(...list.map(p => p.id)) + 1 : 1;
-    list.push({ ...prod, id: newId } as Product);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.post(this.apiUrl, prod).subscribe();
   }
 
   update(prod: Product): void {
-    const list = this.getAll();
-    const i = list.findIndex(p => p.id === prod.id);
-    if (i > -1) {
-      list[i] = prod;
-      localStorage.setItem(this.key, JSON.stringify(list));
-    }
+    this.http.put(`${this.apiUrl}/${prod.id}`, prod).subscribe();
   }
 
   delete(id: number): void {
-    const list = this.getAll().filter(p => p.id !== id);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe();
   }
 }

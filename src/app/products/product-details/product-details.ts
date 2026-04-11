@@ -61,7 +61,7 @@ export class ProductDetails implements OnInit {
 
   loadCategories(): void {
     try {
-      this.categories = this.categoryService.getAll();
+      this.categoryService.getAll().subscribe(c => this.categories = c);
     } catch (error) {
       console.error('Erreur lors du chargement des catégories:', error);
       this.categories = [];

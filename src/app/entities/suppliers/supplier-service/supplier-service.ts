@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { isAdmin } from '../../../shared/role-utils';
 
 export interface Supplier {
@@ -10,59 +11,36 @@ export interface Supplier {
   region: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SupplierService {
-  private readonly key = 'suppliers';
+  private apiUrl = 'http://localhost:3000/api/suppliers';
 
-  private initDefaultsIfNeeded(): void {
-    if (localStorage.getItem(this.key)) return;
-
-    fetch('/assets/data/suppliers.json')
-      .then(res => res.json())
-      .then((data: Supplier[]) => {
-        localStorage.setItem(this.key, JSON.stringify(data));
-      })
-      .catch(() => {
-        localStorage.setItem(this.key, JSON.stringify([{
-          id: 1, nom: "Fournisseur par défaut", adresse: "Casablanca",
-          telephone: "0600000000", email: "default@exemple.ma", region: "Casablanca-Settat"
-        }]));
-      });
-  }
+  constructor(private http: HttpClient) {}
 
   getAll(): Supplier[] {
-    this.initDefaultsIfNeeded();
-    const data = localStorage.getItem(this.key);
-    return data ? JSON.parse(data) : [];
+    const list: Supplier[] = [];
+    this.http.get<Supplier[]>(this.apiUrl).subscribe(data => list.push(...data));
+    return list;
   }
 
   getById(id: number): Supplier | undefined {
-    return this.getAll().find(s => s.id === id);
+    let item = {} as Supplier;
+    this.http.get<Supplier>(`${this.apiUrl}/${id}`).subscribe(data => Object.assign(item, data));
+    return item;
   }
 
   add(supplier: Omit<Supplier, 'id'>): void {
     if (!isAdmin()) return;
-    const list = this.getAll();
-    const newId = list.length ? Math.max(...list.map(s => s.id)) + 1 : 1;
-    list.push({ ...supplier, id: newId } as Supplier);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.post(this.apiUrl, supplier).subscribe();
   }
 
   update(supplier: Supplier): void {
     if (!isAdmin()) return;
-    const list = this.getAll();
-    const index = list.findIndex(s => s.id === supplier.id);
-    if (index !== -1) {
-      list[index] = supplier;
-      localStorage.setItem(this.key, JSON.stringify(list));
-    }
+    this.http.put(`${this.apiUrl}/${supplier.id}`, supplier).subscribe();
   }
 
   delete(id: number): void {
     if (!isAdmin()) return;
-    const list = this.getAll().filter(s => s.id !== id);
-    localStorage.setItem(this.key, JSON.stringify(list));
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe();
   }
 }
